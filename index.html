@@ -189,7 +189,7 @@ input[type="password"]{padding-right:46px;}
 .investment-status{font-size:10px;color:var(--accent3);margin-top:8px;}
 
 /* Table (Scrollable) */
-.plan-wrap{background:#000000;border:1px solid rgba(255,255,255,.1);border-radius:12px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.4);max-width:340px;margin:0 auto;}
+.plan-wrap{background:#000000;border:1px solid rgba(255,255,255,.1);border-radius:0;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.4);max-width:340px;margin:0 auto;}
 .plan-header{background:linear-gradient(135deg, #F59E0B 0%, #FF8C00 100%);padding:9px 12px;text-align:center;}
 .plan-header-title{font-family:'Inter',sans-serif;font-size:12px;font-weight:800;color:#0a1628;letter-spacing:0.4px;}
 .table-wrapper{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0;background:#000000;}
@@ -205,7 +205,6 @@ input[type="password"]{padding-right:46px;}
 .plan-table tbody td:first-child{color:#fff;font-weight:800;font-size:10.5px;}
 .plan-table tbody td:nth-child(2){color:#34D399;font-weight:700;font-size:10px;}
 .plan-table tbody td:nth-child(3){color:#FFD700;font-weight:800;font-size:10.5px;}
-.scroll-hint{text-align:center;padding:8px;font-size:9px;color:var(--muted);background:var(--surface);border-top:1px solid var(--border);}
 .plan-footer{padding:12px;background:var(--surface2);}
 .start-invest-btn{width:100%;background:linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);border:none;border-radius:12px;padding:13px;font-family:'Inter',sans-serif;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#fff;cursor:pointer;}
 .start-invest-btn:active{transform:scale(.98);}
@@ -545,7 +544,7 @@ input[type="password"]{padding-right:46px;}
  <div class="investment-title">ACTIVE INVESTMENT</div>
  <div class="investment-amount" id="active-stake-amount">UGX 0</div>
  <div class="investment-progress"><div class="investment-progress-fill" id="investment-progress-fill" style="width:0%"></div></div>
- <div class="investment-days"><span id="days-completed">0</span><span>Day 56</span></div>
+ <div class="investment-days"><span id="days-completed">0</span><span>Day 80</span></div>
  <div class="investment-status" id="investment-status">Generating 10% daily profit</div>
  </div>
  </div>
@@ -633,29 +632,28 @@ input[type="password"]{padding-right:46px;}
 
  <!-- Returns Plan -->
  <div class="dash-section" id="sec-plan">
- <div class="inner-header"><span style="font-size:22px"></span><div><div class="inner-title">RETURNS</div><div class="inner-sub">10% daily for 56 days (560% total)</div></div></div>
+ <div class="inner-header"><span style="font-size:22px"></span><div><div class="inner-title">RETURNS</div><div class="inner-sub">10% daily for 80 days (800% total)</div></div></div>
  <div class="section">
  <div class="plan-wrap">
- <div class="plan-header"><div class="plan-header-title">Nexo Hub19 Growth Plan — 10% Daily × 56 Days = 560% Total Return</div></div>
+ <div class="plan-header"><div class="plan-header-title">Nexo Hub19 Growth Plan — 10% Daily × 80 Days = 800% Total Return</div></div>
  <div class="table-wrapper">
  <table class="plan-table">
- <thead><tr><th>DEPOSIT (UGX)</th><th>DAILY PROFIT (10%)</th><th>56-DAY TOTAL (UGX)</th></tr></thead>
+ <thead><tr><th>DEPOSIT (UGX)</th><th>DAILY PROFIT (10%)</th><th>80-DAY TOTAL (UGX)</th></tr></thead>
  <tbody>
- <tr><td>10,000</td><td>1,000</td><td>56,000</td></tr>
- <tr><td>20,000</td><td>2,000</td><td>112,000</td></tr>
- <tr><td>50,000</td><td>5,000</td><td>280,000</td></tr>
- <tr><td>100,000</td><td>10,000</td><td>560,000</td></tr>
- <tr><td>200,000</td><td>20,000</td><td>1,120,000</td></tr>
- <tr><td>500,000</td><td>50,000</td><td>2,800,000</td></tr>
- <tr><td>1,000,000</td><td>100,000</td><td>5,600,000</td></tr>
- <tr><td>2,000,000</td><td>200,000</td><td>11,200,000</td></tr>
- <tr><td>5,000,000</td><td>500,000</td><td>28,000,000</td></tr>
- <tr><td>10,000,000</td><td>1,000,000</td><td>56,000,000</td></tr>
- <tr><td>20,000,000</td><td>2,000,000</td><td>112,000,000</td></tr>
+ <tr><td>10,000</td><td>1,000</td><td>80,000</td></tr>
+ <tr><td>20,000</td><td>2,000</td><td>160,000</td></tr>
+ <tr><td>50,000</td><td>5,000</td><td>400,000</td></tr>
+ <tr><td>100,000</td><td>10,000</td><td>800,000</td></tr>
+ <tr><td>200,000</td><td>20,000</td><td>1,600,000</td></tr>
+ <tr><td>500,000</td><td>50,000</td><td>4,000,000</td></tr>
+ <tr><td>1,000,000</td><td>100,000</td><td>8,000,000</td></tr>
+ <tr><td>2,000,000</td><td>200,000</td><td>16,000,000</td></tr>
+ <tr><td>5,000,000</td><td>500,000</td><td>40,000,000</td></tr>
+ <tr><td>10,000,000</td><td>1,000,000</td><td>80,000,000</td></tr>
+ <tr><td>20,000,000</td><td>2,000,000</td><td>160,000,000</td></tr>
  </tbody>
  </table>
  </div>
- <div class="scroll-hint">Swipe horizontally to see all columns </div>
  </div>
  </div>
  </div>
@@ -732,7 +730,7 @@ input[type="password"]{padding-right:46px;}
  <div class="inner-header"><span style="font-size:22px"></span><div><div class="inner-title">Re-Invest</div><div class="inner-sub">Compound your earnings</div></div></div>
  <div class="section">
  <div class="action-card">
- <div class="deposit-note">Re-invest from your <strong>BALANCE</strong> to <strong>STAKE</strong>. Minimum <strong>UGX 10,000</strong>. Earns 10% instant profit + restarts 56-day cycle.</div>
+ <div class="deposit-note">Re-invest from your <strong>BALANCE</strong> to <strong>STAKE</strong>. Minimum <strong>UGX 10,000</strong>. Earns 10% instant profit + restarts 80-day cycle.</div>
  <div class="field-group">
  <label class="field-label">Available BALANCE</label>
  <div class="field-wrap"><span class="field-icon"></span><div class="readonly-field" id="reinvest-balance-display">UGX 0</div></div>
@@ -977,7 +975,7 @@ async function calculateAndPayDailyProfits() {
  
  // STEP 7: Update daysRun in activeInvestment
  let newDaysRun = (userData.activeInvestment?.daysRun || 0) + daysDiff;
- if (newDaysRun > 56) newDaysRun = 56;
+ if (newDaysRun > 80) newDaysRun = 80;
  
  // STEP 8: Prepare activeInvestment object (handle if null/missing)
  let updatedActiveInvestment = userData.activeInvestment || { daysRun: 0 };
@@ -1343,7 +1341,7 @@ function updateActiveInvestmentDisplay() {
  const inv = currentUser.activeInvestment;
  const stakeAmount = currentUser.stake || 0;
  const daysRun = inv.daysRun || 0;
- const totalDays = 56;
+ const totalDays = 80;
  const progress = (daysRun / totalDays) * 100;
  document.getElementById('active-stake-amount').textContent = fmt(stakeAmount);
  document.getElementById('investment-progress-fill').style.width = progress + '%';
@@ -1585,7 +1583,7 @@ async function checkPendingDeposits(username) {
  await userRef.update({ 
  stake: newStake, 
  balance: newBalance,
- activeInvestment: { amount: newStake, startDate: dateStr(), daysLeft: 56, dailyProfit: 0 }
+ activeInvestment: { amount: newStake, startDate: dateStr(), daysLeft: 80, dailyProfit: 0 }
  });
  
  // Update UI silently if user is currently viewing
@@ -1677,7 +1675,7 @@ async function doDeposit() {
  const newBalance = (currentUser.balance || 0) + profit;
  const todayKey = getDateKey(new Date());
  let newActiveInvestment = currentUser.activeInvestment || null;
- if (!newActiveInvestment || newActiveInvestment.daysRun >= 56) {
+ if (!newActiveInvestment || newActiveInvestment.daysRun >= 80) {
  newActiveInvestment = { amount: newStake, startDate: new Date().toISOString(), daysRun: 0, lastPaidDate: todayKey };
  } else {
  newActiveInvestment.amount = newStake;
@@ -1904,7 +1902,7 @@ async function doReinvest() {
  const newBalance = balance - amount + profit;
  const newStake = (currentUser.stake || 0) + amount;
  let newActiveInvestment = currentUser.activeInvestment || null;
- if (!newActiveInvestment || newActiveInvestment.daysRun >= 56) {
+ if (!newActiveInvestment || newActiveInvestment.daysRun >= 80) {
  newActiveInvestment = { amount: newStake, startDate: new Date().toISOString(), daysRun: 0, lastPaidDate: todayKey };
  } else {
  newActiveInvestment.amount = newStake;
