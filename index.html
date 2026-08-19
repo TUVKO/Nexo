@@ -96,7 +96,7 @@ input[type="password"]{padding-right:46px;}
 .phone-prefix-wrap input:focus{border:none;}
 
 /* Dashboard */
-.dashboard-page{display:none;min-height:100vh;padding-bottom:90px;position:relative;z-index:1;}
+.dashboard-page{display:none;min-height:100vh;padding-bottom:calc(150px + env(safe-area-inset-bottom));position:relative;z-index:1;}
 .dashboard-page.active{display:block;}
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--surface);position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);}
 .topbar-left{display:flex;align-items:center;gap:12px;}
@@ -252,19 +252,16 @@ input[type="password"]{padding-right:46px;}
 .logout-btn-new:active{transform:scale(.98);}
 
 /* Bottom Nav */
-.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:500px;background:#0a0e17;display:flex;align-items:center;justify-content:space-around;padding:8px 8px;z-index:200;gap:6px;}
-.nav-item{display:flex;align-items:center;gap:6px;cursor:pointer;padding:9px 12px;border-radius:20px;transition:transform .2s, background .2s;background:#e91e63;flex:1;justify-content:center;}
-.nav-item:active{transform:scale(.94);}
-.nav-icon{font-size:15px;filter:none;}
-.nav-label{font-size:11px;font-weight:700;letter-spacing:0.2px;color:#fff;white-space:nowrap;}
-.nav-item:nth-child(1){background:#6a5acd;}
-.nav-item:nth-child(2){background:#e91e63;}
-.nav-item:nth-child(3){background:#e91e63;}
-.nav-item:nth-child(4){background:#e91e63;}
-.nav-item.active{filter:brightness(1.15);box-shadow:0 4px 12px rgba(0,0,0,.3);}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:500px;background:#0a0e17;display:flex;align-items:center;justify-content:space-around;padding:6px 4px calc(6px + env(safe-area-inset-bottom));z-index:200;height:58px;box-sizing:content-box;}
+.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;padding:4px 2px;border-radius:10px;transition:transform .15s;background:transparent;flex:1;min-width:0;}
+.nav-item:active{transform:scale(.92);}
+.nav-icon{font-size:20px;line-height:1;filter:grayscale(1) opacity(.55);transition:filter .2s;}
+.nav-label{font-size:9.5px;font-weight:600;letter-spacing:0.1px;color:#8a93a6;white-space:nowrap;transition:color .2s;}
+.nav-item.active .nav-icon{filter:none;}
+.nav-item.active .nav-label{color:#FFD700;font-weight:800;}
 
 /* Footer */
-.app-footer{position:fixed;bottom:66px;left:50%;transform:translateX(-50%);width:100%;max-width:500px;background:rgba(15,29,58,0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--card-border);padding:12px 16px;z-index:199;}
+.app-footer{position:fixed;bottom:calc(70px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:100%;max-width:500px;background:rgba(15,29,58,0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--card-border);padding:12px 16px;z-index:199;}
 .footer-content{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;}
 .footer-copyright{font-size:10px;color:rgba(255,255,255,.65);font-weight:600;letter-spacing:0.5px;}
 .footer-links{display:flex;align-items:center;gap:8px;justify-content:center;}
@@ -467,20 +464,17 @@ input[type="password"]{padding-right:46px;}
  <div class="field-wrap"><span class="field-icon"></span>
  <select id="reg-country" onchange="updateRegPrefix()">
  <option value="">Select your country</option>
- <option value="UG">Uganda</option>
- <option value="KE">Kenya</option>
+ <option value="UG">+256</option>
+ <option value="KE">+254</option>
  </select>
  </div>
  <div class="field-error" id="reg-country-err">Please select your country</div>
  </div>
  <div class="field-group">
  <label class="field-label">Phone Number</label>
- <div class="phone-prefix-wrap" id="reg-phone-wrap">
- <div class="phone-prefix-badge" id="reg-prefix">+256</div>
- <input type="tel" id="reg-phone" placeholder="7XXXXXXXX" maxlength="9" oninput="regPhoneInput(this)">
- </div>
- <div class="field-hint">9 digits starting with 7</div>
- <div class="field-error" id="reg-phone-err">Enter 9 digits starting with 7</div>
+ <div class="field-wrap"><span class="field-icon"></span><input type="tel" id="reg-phone" placeholder="0700012345" maxlength="10" oninput="regPhoneInput(this)"></div>
+ <div class="field-hint">10 digits starting with 0</div>
+ <div class="field-error" id="reg-phone-err">Enter 10 digits starting with 0</div>
  </div>
  <div class="field-group">
  <label class="field-label">Password</label>
@@ -754,10 +748,11 @@ input[type="password"]{padding-right:46px;}
  </div>
 
  <nav class="bottom-nav">
- <div class="nav-item active" onclick="switchTab('home')"><span class="nav-icon"></span><span class="nav-label">Home</span></div>
- <div class="nav-item" onclick="switchTab('plan')"><span class="nav-icon"></span><span class="nav-label">Investment</span></div>
- <div class="nav-item" onclick="switchTab('profile')"><span class="nav-icon"></span><span class="nav-label">Profile</span></div>
- <div class="nav-item" onclick="openMenu()"><span class="nav-icon">▦</span><span class="nav-label">Menu</span></div>
+ <div class="nav-item active" onclick="switchTab('home')"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></div>
+ <div class="nav-item" onclick="switchTab('team')"><span class="nav-icon">👥</span><span class="nav-label">Team</span></div>
+ <div class="nav-item" onclick="switchTab('plan')"><span class="nav-icon">📊</span><span class="nav-label">Plan</span></div>
+ <div class="nav-item" onclick="switchTab('history')"><span class="nav-icon">📋</span><span class="nav-label">History</span></div>
+ <div class="nav-item" onclick="switchTab('profile')"><span class="nav-icon">👤</span><span class="nav-label">Details</span></div>
  </nav>
 
  <footer class="app-footer">
@@ -1117,12 +1112,10 @@ function checkStrength(pw) {
 }
 
 function updateRegPrefix() {
- const c = document.getElementById('reg-country').value;
- const pr = document.getElementById('reg-prefix');
- if (pr) pr.textContent = c === 'KE' ? '+254' : '+256';
+ // Country dropdown now shows the phone prefix directly (+256 / +254); no separate badge to update.
 }
 
-function regPhoneInput(inp) { inp.value = inp.value.replace(/\D/g, '').slice(0, 9); }
+function regPhoneInput(inp) { inp.value = inp.value.replace(/\D/g, '').slice(0, 10); }
 function depPhoneInput(inp) { inp.value = inp.value.replace(/\D/g, '').slice(0, 9); }
 
 function copyRef() {
@@ -1245,7 +1238,7 @@ function closePrivacyModal(event) {
 }
 
 const tabMap = { home: 'sec-home', history: 'sec-history', team: 'sec-team', plan: 'sec-plan', profile: 'sec-profile', deposit: 'sec-deposit', withdraw: 'sec-withdraw', reinvest: 'sec-reinvest' };
-const navOrder = ['home', 'plan', 'profile'];
+const navOrder = ['home', 'team', 'plan', 'history', 'profile'];
 
 function switchTab(tab) {
  if (tab === 'withdraw' && settingsData.withdrawLocked) {
@@ -1989,13 +1982,13 @@ async function doRegister() {
  let ok = true;
  if (!username) { setErr('reg-user-err', true, 'Username is required'); ok = false; }
  if (!country) { setErr('reg-country-err', true, 'Please select your country'); ok = false; }
- if (!phoneDigits || phoneDigits.length !== 9 || !phoneDigits.startsWith('7')) { setErr('reg-phone-err', true, 'Enter 9 digits starting with 7'); ok = false; }
+ if (!phoneDigits || phoneDigits.length !== 10 || !phoneDigits.startsWith('0')) { setErr('reg-phone-err', true, 'Enter 10 digits starting with 0'); ok = false; }
  if (!password || password.length < 6) { setErr('reg-pw-err', true, 'Password must be at least 6 characters'); ok = false; }
  if (!ok) return;
  const existing = await db.ref('users/' + safeKey(username)).get();
  if (existing.exists()) { setErr('reg-user-err', true, 'Username already taken'); return; }
  const prefix = country === 'KE' ? '+254' : '+256';
- const fullPhone = prefix + phoneDigits;
+ const fullPhone = prefix + phoneDigits.slice(1);
  const now = dateStr();
  const todayKey = getDateKey(new Date());
  const newUser = {
