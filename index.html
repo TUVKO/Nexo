@@ -63,7 +63,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .auth-logo{width:72px;height:72px;background:linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);border-radius:22px;display:grid;place-items:center;font-size:34px;margin:0 auto 14px;color:#fff;box-shadow:0 8px 24px rgba(22,35,74,.25);}
 .auth-brand{font-family:'Inter',sans-serif;font-size:30px;font-weight:900;color:var(--accent);margin-bottom:4px;letter-spacing:0.5px;}
 .auth-tagline{font-size:12px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
-.auth-card{background:var(--card);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--card-border);border-radius:24px;padding:28px 22px;box-shadow:0 8px 32px rgba(0,0,0,.35);}
+.auth-card{background:transparent;border:none;border-radius:0;padding:0;box-shadow:none;}
 .auth-title{font-family:'Inter',sans-serif;font-size:21px;font-weight:800;margin-bottom:4px;color:var(--accent);}
 .auth-subtitle{font-size:12px;color:var(--muted);margin-bottom:20px;}
 .field-group{margin-bottom:14px;}
@@ -179,7 +179,7 @@ input[type="password"]{padding-right:46px;}
 .whatsapp-float:hover{transform:scale(1.08);}
 
 /* Investment Active Card */
-.investment-card{background:var(--card);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--card-border);border-radius:16px;padding:16px;margin-bottom:16px;box-shadow:0 8px 24px rgba(0,0,0,.25);}
+.investment-card{background:transparent;border:none;border-radius:0;padding:0;margin-bottom:16px;box-shadow:none;}
 .investment-title{font-size:12px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
 .investment-amount{font-size:20px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--text);margin-bottom:8px;}
 .investment-progress{background:var(--surface2);border-radius:10px;height:8px;margin:12px 0;overflow:hidden;}
@@ -276,7 +276,7 @@ input[type="password"]{padding-right:46px;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
 /* Forms */
-.action-card{background:var(--card);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--card-border);border-radius:20px;padding:22px 18px;box-shadow:0 8px 32px rgba(0,0,0,.3);}
+.action-card{background:transparent;border:none;border-radius:0;padding:0;box-shadow:none;}
 .green-btn{width:100%;background:linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);border:none;border-radius:14px;padding:16px;font-family:'Inter',sans-serif;font-size:14px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:#fff;cursor:pointer;margin-top:8px;transition:transform .2s, filter .2s;}
 .green-btn:active{transform:scale(.98);filter:brightness(1.1);}
 .green-btn:disabled{opacity:0.4;cursor:not-allowed;}
@@ -413,19 +413,11 @@ input[type="password"]{padding-right:46px;}
 .wa-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:fit-content;margin-left:auto;background:#25D366;border:none;border-radius:14px;padding:12px 20px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;color:#fff;cursor:pointer;}
 .wa-btn:active{transform:scale(.98);}
 
-.loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:16px;}
-.loading-spinner{width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg)}}
-.loading-text{font-size:14px;color:var(--muted);}
+
+
 </style>
 </head>
 <body>
-
-<div class="loading-screen" id="loading-screen">
-  <div style="font-family:'Inter',sans-serif;font-size:28px;font-weight:900;color:var(--accent);margin-bottom:10px;">Nexo Hub19</div>
-  <div class="loading-spinner"></div>
-  <div class="loading-text">Loading...</div>
-</div>
 
 <!-- LOGIN -->
 <div class="auth-page" id="login-page">
@@ -542,7 +534,7 @@ input[type="password"]{padding-right:46px;}
             <div class="stat-label">Balance</div>
           </div>
           <div class="stat-box">
-            <div class="stat-icon">📈</div>
+            <div class="stat-icon">??</div>
             <div class="stat-value earn" id="stat-earnings">UGX 0</div>
             <div class="stat-label">Earnings</div>
           </div>
@@ -1075,8 +1067,9 @@ async function initApp() {
     showAuth('login-page');
   }
   
-  // HIDE LOADING SCREEN IMMEDIATELY
-  document.getElementById('loading-screen').style.display = 'none';
+  // Loading screen removed - browser's native tab indicator handles load state
+  const legacyLoadingScreen = document.getElementById('loading-screen');
+  if (legacyLoadingScreen) legacyLoadingScreen.style.display = 'none';
 }
 
 // Background profit loop (every 30 min) - SILENT
@@ -1156,6 +1149,21 @@ function openWaGroup() {
   // No modal - just silent fail
 }
 
+let suppressHistoryPush = false;
+let isFirstNav = true;
+let lastPushedHash = null;
+function pushNavState(state, hash) {
+  if (suppressHistoryPush) return;
+  if (hash === lastPushedHash) return;
+  lastPushedHash = hash;
+  if (isFirstNav) {
+    history.replaceState(state, '', '#' + hash);
+    isFirstNav = false;
+  } else {
+    history.pushState(state, '', '#' + hash);
+  }
+}
+
 function showAuth(id) {
   document.querySelectorAll('.auth-page').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; });
   const t = document.getElementById(id);
@@ -1166,12 +1174,14 @@ function showAuth(id) {
     const refDisplay = document.getElementById('reg-referrer-display');
     if (refDisplay) refDisplay.textContent = refCode || 'None';
   }
+  pushNavState({ view: 'auth', page: id }, id);
 }
 
 function showDashboard() {
   document.querySelectorAll('.auth-page').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; });
   document.getElementById('dashboard-page').style.display = 'block';
   document.getElementById('dashboard-page').classList.add('active');
+  pushNavState({ view: 'dashboard', tab: 'home' }, 'home');
 }
 
 function openMenu() {
@@ -1253,6 +1263,7 @@ function switchTab(tab) {
   const idx = navOrder.indexOf(tab);
   if (idx >= 0) document.querySelectorAll('.nav-item')[idx].classList.add('active');
   closeMenu();
+  pushNavState({ view: 'dashboard', tab: tab }, tab);
 }
 
 function menuNav(tab) { switchTab(tab); }
@@ -2078,6 +2089,44 @@ function startInactivityWatcher() {
     if (refCode && document.getElementById('reg-referrer-display')) document.getElementById('reg-referrer-display').textContent = refCode;
   }
 })();
+
+window.addEventListener('popstate', (e) => {
+  const state = e.state;
+  suppressHistoryPush = true;
+  if (!state) {
+    if (currentUser) {
+      const dp = document.getElementById('dashboard-page');
+      if (dp && !dp.classList.contains('active')) {
+        document.querySelectorAll('.auth-page').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; });
+        dp.style.display = 'block';
+        dp.classList.add('active');
+      }
+      switchTab('home');
+      lastPushedHash = 'home';
+    } else {
+      showAuth('login-page');
+      lastPushedHash = 'login-page';
+    }
+  } else if (state.view === 'auth') {
+    showAuth(state.page || 'login-page');
+    lastPushedHash = state.page || 'login-page';
+  } else if (state.view === 'dashboard') {
+    if (currentUser) {
+      const dp = document.getElementById('dashboard-page');
+      if (dp && !dp.classList.contains('active')) {
+        document.querySelectorAll('.auth-page').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; });
+        dp.style.display = 'block';
+        dp.classList.add('active');
+      }
+      switchTab(state.tab || 'home');
+      lastPushedHash = state.tab || 'home';
+    } else {
+      showAuth('login-page');
+      lastPushedHash = 'login-page';
+    }
+  }
+  suppressHistoryPush = false;
+});
 
 initApp();
 </script>
