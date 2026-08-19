@@ -73,8 +73,9 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 input,select{width:100%;background:rgba(20,32,58,0.8);border:1px solid var(--border);border-radius:12px;padding:13px 14px 13px 42px;font-family:'Inter',sans-serif;font-size:15px;color:var(--text);outline:none;transition:border-color .2s, box-shadow .2s;}
 input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(255,215,0,.12);}
 select{cursor:pointer;}select option{background:var(--surface2);}
-.eye-btn{position:absolute;right:14px;background:none;border:none;font-size:18px;cursor:pointer;padding:4px;color:var(--muted);}
+.eye-btn{position:absolute;right:14px;background:none;border:none;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;cursor:pointer;padding:4px;color:var(--muted);}
 .eye-btn:hover{color:var(--accent);}
+.field-wrap input[type="password"]{padding-right:54px;}
 input[type="password"]{padding-right:46px;}
 .field-hint{font-size:10px;color:var(--muted);margin-top:5px;padding-left:4px;}
 .field-error{font-size:10px;color:var(--warn);margin-top:5px;padding-left:4px;display:none;}
@@ -422,7 +423,7 @@ input[type="password"]{padding-right:46px;}
 <!-- LOGIN -->
 <div class="auth-page" id="login-page">
   <div class="auth-hero">
-    <div class="auth-logo">📈</div>
+    <div class="auth-logo">N</div>
     <div class="auth-brand">Nexo Hub19</div>
     <div class="auth-tagline">Grow Your Wealth Daily</div>
   </div>
@@ -431,16 +432,16 @@ input[type="password"]{padding-right:46px;}
     <div class="auth-subtitle">Sign in to your investment account</div>
     <div class="field-group">
       <label class="field-label">Username</label>
-      <div class="field-wrap"><span class="field-icon">👤</span><input type="text" id="login-username" placeholder="Enter your username"></div>
+      <div class="field-wrap"><span class="field-icon"></span><input type="text" id="login-username" placeholder="Enter your username"></div>
       <div class="field-error" id="login-user-err">Please enter your username</div>
     </div>
     <div class="field-group">
       <label class="field-label">Password</label>
-      <div class="field-wrap"><span class="field-icon">🔒</span><input type="password" id="login-password" placeholder="Enter password"><button class="eye-btn" onclick="toggleEye('login-password',this)">👁️</button></div>
+      <div class="field-wrap"><span class="field-icon"></span><input type="password" id="login-password" placeholder="Enter password"><button class="eye-btn" onclick="toggleEye('login-password',this)">Show</button></div>
       <div class="field-error" id="login-pw-err">Please enter your password</div>
     </div>
     <div class="field-error" id="login-general-err" style="text-align:center;margin-bottom:10px;font-size:12px;"></div>
-    <button class="submit-btn" onclick="doLogin()">Sign In →</button>
+    <button class="submit-btn" onclick="doLogin()">Login</button>
     <div class="auth-switch">Don't have an account? <a onclick="showAuth('register-page')">Register Now</a></div>
   </div>
 </div>
@@ -448,25 +449,25 @@ input[type="password"]{padding-right:46px;}
 <!-- REGISTER -->
 <div class="auth-page" id="register-page">
   <div class="auth-hero">
-    <div class="auth-logo">📈</div>
+    <div class="auth-logo">N</div>
     <div class="auth-brand">Nexo Hub19</div>
     <div class="auth-tagline">Start Earning Today</div>
   </div>
   <div class="auth-card">
     <div class="auth-title">Create Account</div>
-    <div class="auth-subtitle">Get UGX 4,000 registration bonus 🎁</div>
+    <div class="auth-subtitle">Get UGX 4,000 registration bonus</div>
     <div class="field-group">
       <label class="field-label">Username</label>
-      <div class="field-wrap"><span class="field-icon">👤</span><input type="text" id="reg-username" placeholder="Choose a username"></div>
+      <div class="field-wrap"><span class="field-icon"></span><input type="text" id="reg-username" placeholder="Choose a username"></div>
       <div class="field-error" id="reg-user-err">Username is required</div>
     </div>
     <div class="field-group">
       <label class="field-label">Country</label>
-      <div class="field-wrap"><span class="field-icon">🌍</span>
+      <div class="field-wrap"><span class="field-icon"></span>
         <select id="reg-country" onchange="updateRegPrefix()">
           <option value="">Select your country</option>
-          <option value="UG">🇺🇬 Uganda</option>
-          <option value="KE">🇰🇪 Kenya</option>
+          <option value="UG">Uganda</option>
+          <option value="KE">Kenya</option>
         </select>
       </div>
       <div class="field-error" id="reg-country-err">Please select your country</div>
@@ -482,13 +483,13 @@ input[type="password"]{padding-right:46px;}
     </div>
     <div class="field-group">
       <label class="field-label">Password</label>
-      <div class="field-wrap"><span class="field-icon">🔒</span><input type="password" id="reg-password" placeholder="Min. 6 characters" oninput="checkStrength(this.value)"><button class="eye-btn" onclick="toggleEye('reg-password',this)">👁️</button></div>
+      <div class="field-wrap"><span class="field-icon"></span><input type="password" id="reg-password" placeholder="Min. 6 characters" oninput="checkStrength(this.value)"><button class="eye-btn" onclick="toggleEye('reg-password',this)">Show</button></div>
       <div class="pw-strength"><div class="pw-bar" id="pw-b1"></div><div class="pw-bar" id="pw-b2"></div><div class="pw-bar" id="pw-b3"></div></div>
       <div class="field-error" id="reg-pw-err">Password must be at least 6 characters</div>
     </div>
     <div class="field-group">
       <label class="field-label">Confirm Password</label>
-      <div class="field-wrap"><span class="field-icon">🔐</span><input type="password" id="reg-confirm" placeholder="Repeat password"><button class="eye-btn" onclick="toggleEye('reg-confirm',this)">👁️</button></div>
+      <div class="field-wrap"><span class="field-icon"></span><input type="password" id="reg-confirm" placeholder="Repeat password"><button class="eye-btn" onclick="toggleEye('reg-confirm',this)">Show</button></div>
       <div class="field-error" id="reg-confirm-err">Passwords do not match</div>
     </div>
     <div class="field-group">
@@ -496,7 +497,7 @@ input[type="password"]{padding-right:46px;}
       <div style="background:var(--surface2);padding:12px 14px;border-radius:8px;border:1px solid var(--border);color:var(--accent);font-weight:600;" id="reg-referrer-display">None</div>
     </div>
     <div class="field-error" id="reg-general-err" style="text-align:center;margin-bottom:10px;font-size:12px;"></div>
-    <button class="submit-btn" onclick="doRegister()">Create Account & Earn 🎁</button>
+    <button class="submit-btn" onclick="doRegister()">Register</button>
     <div class="auth-switch">Already have an account? <a onclick="showAuth('login-page')">Sign In</a></div>
   </div>
 </div>
@@ -534,7 +535,7 @@ input[type="password"]{padding-right:46px;}
             <div class="stat-label">Balance</div>
           </div>
           <div class="stat-box">
-            <div class="stat-icon">??</div>
+            <div class="stat-icon">📈</div>
             <div class="stat-value earn" id="stat-earnings">UGX 0</div>
             <div class="stat-label">Earnings</div>
           </div>
@@ -1110,8 +1111,8 @@ function clearErrors(...ids) { ids.forEach(id => setErr(id, false)); }
 
 function toggleEye(inputId, btn) {
   const inp = document.getElementById(inputId);
-  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
-  else { inp.type = 'password'; btn.textContent = '👁️'; }
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = 'Hide'; }
+  else { inp.type = 'password'; btn.textContent = 'Show'; }
 }
 
 function checkStrength(pw) {
