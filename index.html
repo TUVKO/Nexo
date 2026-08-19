@@ -571,7 +571,14 @@ input[type="password"]{padding-right:46px;}
  </div>
 
  <!-- Floating WhatsApp Icon -->
- <a href="#" id="whatsapp-float-btn" class="whatsapp-float" target="_blank"></a>
+ <a href="#" id="whatsapp-float-btn" class="whatsapp-float" target="_blank">
+ <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+ <path d="M4 13v-2a8 8 0 0116 0v2" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+ <path d="M4 13a2 2 0 012-2h1a1 1 0 011 1v4a1 1 0 01-1 1H6a2 2 0 01-2-2v-2z" fill="#fff"/>
+ <path d="M20 13a2 2 0 00-2-2h-1a1 1 0 00-1 1v4a1 1 0 001 1h1a2 2 0 002-2v-2z" fill="#fff"/>
+ <path d="M18 17v1a2 2 0 01-2 2h-3" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+ </svg>
+ </a>
 
  <!-- History - New Card Design -->
  <div class="dash-section" id="sec-history">
@@ -656,17 +663,42 @@ input[type="password"]{padding-right:46px;}
  </div>
  </div>
  </div>
+ <div class="section">
+ <div class="ref-commission-info">
+ <div style="font-family:'Inter',sans-serif;font-size:14px;font-weight:800;color:var(--text);margin-bottom:10px;">Referral Program</div>
+ <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;">Earn a bonus every time someone you referred — or someone in their downline — makes a deposit. Bonuses pay out instantly across 3 levels:</div>
+ <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
+ <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--surface2);border-radius:10px;">
+ <span style="font-size:12px;color:var(--muted);">Level 1 — Direct referral</span>
+ <span id="ref-pct-l1-plan" style="font-size:14px;font-weight:800;color:var(--accent);">10%</span>
+ </div>
+ <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--surface2);border-radius:10px;">
+ <span style="font-size:12px;color:var(--muted);">Level 2 — Their referrals</span>
+ <span id="ref-pct-l2-plan" style="font-size:14px;font-weight:800;color:var(--accent);">4%</span>
+ </div>
+ <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--surface2);border-radius:10px;">
+ <span style="font-size:12px;color:var(--muted);">Level 3 — Third tier</span>
+ <span id="ref-pct-l3-plan" style="font-size:14px;font-weight:800;color:var(--accent);">2%</span>
+ </div>
+ </div>
+ <div style="font-size:10px;color:var(--muted);line-height:1.5;">These percentages are set by the platform admin and may be adjusted at any time. Current rates shown above always reflect the latest settings.</div>
+ </div>
+ </div>
  </div>
 
  <!-- Profile -->
  <div class="dash-section" id="sec-profile">
- <div class="inner-header"><span style="font-size:22px"></span><div><div class="inner-title">INFOR</div><div class="inner-sub">Your account details</div></div></div>
+ <div class="inner-header"><span style="font-size:22px"></span><div><div class="inner-title">Account</div><div class="inner-sub">Manage your profile</div></div></div>
  <div class="section">
- <div class="profile-simple-info">
- <div class="profile-simple-item"><span class="profile-simple-label">Username</span><span class="profile-simple-value" id="profile-user-simple">—</span></div>
- <div class="profile-simple-item"><span class="profile-simple-label">Phone Number</span><span class="profile-simple-value" id="profile-phone-simple">—</span></div>
- <div class="profile-simple-item"><span class="profile-simple-label">Registered Date</span><span class="profile-simple-value" id="profile-date-simple">—</span></div>
- <div class="profile-simple-item"><span class="profile-simple-label">Status</span><span class="profile-simple-value" id="profile-status-simple">—</span></div>
+ <div class="profile-header-section">
+ <div class="profile-avatar-lg" id="profile-avatar-lg">—</div>
+ <div class="profile-name-header" id="profile-user-simple">—</div>
+ <div class="profile-status-badge" id="profile-status-simple">—</div>
+ </div>
+ <div class="profile-info-section">
+ <div class="profile-section-title">Account Details</div>
+ <div class="profile-info-item"><span class="profile-info-label">Phone Number</span><span class="profile-info-value" id="profile-phone-simple">—</span></div>
+ <div class="profile-info-item"><span class="profile-info-label">Registered Date</span><span class="profile-info-value" id="profile-date-simple">—</span></div>
  </div>
  <button class="logout-btn-new" onclick="doLogout()">Sign Out</button>
  </div>
@@ -1283,6 +1315,12 @@ function updateUIWithSettings() {
  if (pctL1) pctL1.textContent = (settingsData.refL1 || 10) + '%';
  if (pctL2) pctL2.textContent = (settingsData.refL2 || 4) + '%';
  if (pctL3) pctL3.textContent = (settingsData.refL3 || 2) + '%';
+ const planPctL1 = document.getElementById('ref-pct-l1-plan');
+ const planPctL2 = document.getElementById('ref-pct-l2-plan');
+ const planPctL3 = document.getElementById('ref-pct-l3-plan');
+ if (planPctL1) planPctL1.textContent = (settingsData.refL1 || 10) + '%';
+ if (planPctL2) planPctL2.textContent = (settingsData.refL2 || 4) + '%';
+ if (planPctL3) planPctL3.textContent = (settingsData.refL3 || 2) + '%';
  const withInp = document.getElementById('with-amount');
  if (withInp) withInp.min = minWith;
  const depAmount = document.getElementById('dep-amount');
@@ -1386,10 +1424,18 @@ function updateProfileUI() {
  if (avatarEl) avatarEl.textContent = (currentUser.username || '?').charAt(0).toUpperCase();
  const welcomeAvatarEl = document.getElementById('dash-welcome-avatar');
  if (welcomeAvatarEl) welcomeAvatarEl.textContent = (currentUser.username || '?').charAt(0).toUpperCase();
+ const profileAvatarEl = document.getElementById('profile-avatar-lg');
+ if (profileAvatarEl) profileAvatarEl.textContent = (currentUser.username || '?').charAt(0).toUpperCase();
  document.getElementById('profile-user-simple').textContent = currentUser.username || '—';
  document.getElementById('profile-phone-simple').textContent = currentUser.phone || '—';
  document.getElementById('profile-date-simple').textContent = currentUser.joinedDate || '2025';
- document.getElementById('profile-status-simple').textContent = currentUser.activated ? 'Active' : 'Inactive';
+ const statusEl = document.getElementById('profile-status-simple');
+ if (statusEl) {
+ const isActive = !!currentUser.activated;
+ statusEl.textContent = isActive ? 'Active' : 'Inactive';
+ statusEl.style.background = isActive ? 'rgba(52,211,153,.25)' : 'rgba(255,255,255,.15)';
+ statusEl.style.borderColor = isActive ? 'rgba(52,211,153,.6)' : 'rgba(255,255,255,.35)';
+ }
  document.getElementById('with-phone-display').textContent = currentUser.phone || '—';
 }
 
