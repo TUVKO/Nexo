@@ -119,6 +119,12 @@ input[type="password"]{padding-right:46px;}
 .close-menu{width:32px;height:32px;border-radius:8px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);font-size:18px;cursor:pointer;display:grid;place-items:center;}
 .side-menu-items{flex:1;padding:16px;}
 .menu-item{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:12px;cursor:pointer;margin-bottom:4px;font-size:14px;font-weight:600;color:#fff;}
+.menu-chevron{margin-left:auto;font-size:16px;transition:transform .2s;color:rgba(255,255,255,.6);}
+.menu-chevron.open{transform:rotate(90deg);}
+.menu-submenu{max-height:0;overflow:hidden;transition:max-height .3s ease;padding-left:14px;}
+.menu-submenu.open{max-height:300px;}
+.menu-subitem{padding:10px 14px;border-radius:10px;cursor:pointer;margin-bottom:2px;font-size:13px;font-weight:500;color:rgba(255,255,255,.75);}
+.menu-subitem:hover{background:rgba(255,255,255,.08);color:#fff;}
 .menu-item:hover{background:rgba(255,255,255,.08);}
 .menu-item.active-menu{background:rgba(255,255,255,.12);color:var(--gold, #FFD700);}
 .menu-item-icon{font-size:20px;width:28px;}
@@ -247,6 +253,23 @@ input[type="password"]{padding-right:46px;}
 .profile-simple-item{background:var(--card);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--card-border);border-radius:14px;padding:16px;display:flex;align-items:center;justify-content:space-between;}
 .profile-simple-label{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:0.5px;}
 .profile-simple-value{font-size:14px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--accent);}
+.profile-compact-row{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 4px 14px rgba(10,22,61,.06);}
+.profile-compact-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;flex-shrink:0;}
+.profile-compact-name{font-size:16px;font-weight:800;color:var(--text);margin-bottom:5px;}
+.profile-compact-status{display:inline-block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;padding:3px 10px;border-radius:10px;background:rgba(16,185,129,.15);color:#0a8a5f;}
+.settings-list{background:var(--card);border:1px solid var(--card-border);border-radius:16px;overflow:hidden;margin-bottom:14px;}
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:15px 16px;border-bottom:1px solid var(--border);cursor:pointer;}
+.settings-list .settings-row:last-child{border-bottom:none;}
+.settings-row-label{font-size:13px;font-weight:600;color:var(--text);}
+.settings-chevron{color:var(--muted);font-size:14px;transition:transform .2s;}
+.settings-row.open .settings-chevron{transform:rotate(90deg);}
+.settings-form{max-height:0;overflow:hidden;transition:max-height .3s ease;background:rgba(0,0,0,.015);}
+.settings-form.open{max-height:400px;}
+.settings-form-inner{padding:14px 16px 18px;}
+.settings-form-actions{display:flex;gap:8px;margin-top:4px;}
+.settings-btn-save{flex:1;background:var(--navy);color:#fff;border:none;border-radius:10px;padding:11px;font-weight:700;font-size:12px;letter-spacing:.3px;text-transform:uppercase;cursor:pointer;}
+.settings-btn-save:active{transform:scale(.98);}
+.settings-btn-cancel{flex:1;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:11px;font-weight:700;font-size:12px;letter-spacing:.3px;text-transform:uppercase;cursor:pointer;}
 .logout-btn-new{width:100%;background:var(--warn);border:none;border-radius:14px;color:#fff;padding:16px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;}
 .logout-btn-new:active{transform:scale(.98);}
 
@@ -330,32 +353,23 @@ input[type="password"]{padding-right:46px;}
 .tx-search-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;font-family:'Inter',sans-serif;font-size:14px;color:var(--text);outline:none;margin-bottom:12px;}
 .tx-search-input:focus{border-color:var(--accent);}
 
-.tx-cards-grid{display:grid;grid-template-columns:1fr;gap:12px;}
-@media (min-width:480px){.tx-cards-grid{grid-template-columns:repeat(2,1fr);}}
+.tx-cards-grid{display:flex;flex-direction:column;gap:8px;}
+.tx-card{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:11px 13px;cursor:pointer;transition:transform .15s;box-shadow:0 3px 10px rgba(0,0,0,.08);}
+.tx-card:active{transform:scale(.98);}
+.tx-card-header{display:flex;align-items:center;gap:10px;flex:1;min-width:0;margin-bottom:0;}
+.tx-card-icon{font-size:15px;width:34px;height:34px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--surface2);border-radius:9px;}
+.tx-card-type{font-size:12.5px;color:var(--text);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tx-card-date{font-size:9.5px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+.tx-card-amount{font-size:12.5px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--text);margin-bottom:0;text-align:right;white-space:nowrap;}
+.tx-card-status{display:block;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:0.4px;text-align:right;margin-top:2px;}
+@media (min-width:480px){.tx-cards-grid{grid-template-columns:1fr;}}
 
-.tx-card{background:var(--card);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--card-border);border-radius:16px;padding:16px;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.2);}
-.tx-card:active{transform:scale(0.98);}
-.tx-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--accent);}
-
-.tx-card.tx-deposit::before{background:linear-gradient(90deg, #10b981, #059669);}
-.tx-card.tx-withdrawal::before{background:linear-gradient(90deg, #ef4444, #dc2626);}
-.tx-card.tx-profit::before{background:linear-gradient(90deg, #d4af37, #c9a227);}
-.tx-card.tx-bonus::before{background:linear-gradient(90deg, #f59e0b, #d97706);}
-.tx-card.tx-referral::before{background:linear-gradient(90deg, #8b5cf6, #7c3aed);}
-
-.tx-card-header{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
-.tx-card-icon{font-size:28px;width:50px;height:50px;display:flex;align-items:center;justify-content:center;background:var(--surface2);border-radius:12px;}
-.tx-card-type{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;}
-.tx-card-date{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
-
-.tx-card-amount{font-size:20px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--text);margin-bottom:10px;}
 .tx-card-amount.positive{color:#10b981;}
 .tx-card-amount.negative{color:#ef4444;}
 
-.tx-card-status{display:inline-block;font-size:10px;font-weight:800;padding:4px 10px;border-radius:8px;text-transform:uppercase;letter-spacing:0.5px;}
-.tx-status-completed{background:rgba(16, 185, 129, 0.2);color:#10b981;border:1px solid #10b981;}
-.tx-status-pending{background:rgba(245, 158, 11, 0.2);color:#f59e0b;border:1px solid #f59e0b;}
-.tx-status-failed{background:rgba(239, 68, 68, 0.2);color:#ef4444;border:1px solid #ef4444;}
+.tx-status-completed{color:#10b981;}
+.tx-status-pending{color:#f59e0b;}
+.tx-status-failed{color:#ef4444;}
 
 .tx-empty-state{text-align:center;padding:60px 20px;}
 .tx-empty-icon{font-size:48px;margin-bottom:12px;}
@@ -582,23 +596,13 @@ input[type="password"]{padding-right:46px;}
 
  <!-- History - New Card Design -->
  <div class="dash-section" id="sec-history">
- <div class="inner-header"><span style="font-size:22px"></span><div><div class="inner-title">History</div><div class="inner-sub">All your transactions</div></div></div>
+ <div class="inner-header"><span style="font-size:22px"></span><div><div class="inner-title">History</div><div class="inner-sub" id="history-filter-label">All your transactions</div></div></div>
  
- <!-- Search and Filter -->
+ <!-- Search -->
  <div style="margin-bottom:16px;">
  <input type="text" id="tx-search-box" placeholder=" Search transactions..." class="tx-search-input" oninput="renderHistory()">
  </div>
- 
- <!-- Filter Pills -->
- <div class="tx-filter-pills">
- <button class="tx-pill active" onclick="setTxFilter('all',this)">All</button>
- <button class="tx-pill" onclick="setTxFilter('Deposit',this)">Deposits</button>
- <button class="tx-pill" onclick="setTxFilter('Withdrawal',this)">Withdrawals</button>
- <button class="tx-pill" onclick="setTxFilter('Profit',this)">Profits</button>
- <button class="tx-pill" onclick="setTxFilter('Bonus',this)">Bonuses</button>
- <button class="tx-pill" onclick="setTxFilter('Referral',this)">Referral</button>
- </div>
- 
+
  <!-- Transaction Cards -->
  <div class="section">
  <div id="history-list" class="tx-cards-grid"><div class="tx-empty-state"><div class="tx-empty-icon"></div><div class="tx-empty-title">No Records Yet</div><div class="tx-empty-text">Your transaction history will appear here.</div></div></div>
@@ -690,16 +694,65 @@ input[type="password"]{padding-right:46px;}
  <div class="dash-section" id="sec-profile">
  <div class="inner-header"><span style="font-size:22px"></span><div><div class="inner-title">Account</div><div class="inner-sub">Manage your profile</div></div></div>
  <div class="section">
- <div class="profile-header-section">
- <div class="profile-avatar-lg" id="profile-avatar-lg">—</div>
- <div class="profile-name-header" id="profile-user-simple">—</div>
- <div class="profile-status-badge" id="profile-status-simple">—</div>
+ <div class="profile-compact-row">
+ <div class="profile-compact-avatar" id="profile-avatar-lg">—</div>
+ <div>
+ <div class="profile-compact-name" id="profile-user-simple">—</div>
+ <span class="profile-compact-status" id="profile-status-simple">—</span>
  </div>
+ </div>
+
  <div class="profile-info-section">
  <div class="profile-section-title">Account Details</div>
  <div class="profile-info-item"><span class="profile-info-label">Phone Number</span><span class="profile-info-value" id="profile-phone-simple">—</span></div>
  <div class="profile-info-item"><span class="profile-info-label">Registered Date</span><span class="profile-info-value" id="profile-date-simple">—</span></div>
  </div>
+
+ <div class="settings-list">
+ <div class="settings-row" onclick="toggleSettingsForm('pwd')"><span class="settings-row-label">Change Password</span><span class="settings-chevron" id="pwd-chevron">›</span></div>
+ <div class="settings-form" id="pwd-form">
+ <div class="settings-form-inner">
+ <div class="field-group"><label class="field-label">Current Password</label><input type="password" id="cp-old-pw" placeholder="Enter current password"></div>
+ <div class="field-group"><label class="field-label">New Password</label><input type="password" id="cp-new-pw" placeholder="Min. 6 characters"></div>
+ <div class="field-group"><label class="field-label">Confirm New Password</label><input type="password" id="cp-confirm-pw" placeholder="Repeat new password"></div>
+ <div class="field-error" id="cp-pw-err">Error</div>
+ <div class="settings-form-actions">
+ <button class="settings-btn-cancel" onclick="toggleSettingsForm('pwd')">Cancel</button>
+ <button class="settings-btn-save" onclick="submitChangePassword()">Save</button>
+ </div>
+ </div>
+ </div>
+
+ <div class="settings-row" onclick="toggleSettingsForm('phone')"><span class="settings-row-label">Change Phone Number</span><span class="settings-chevron" id="phone-chevron">›</span></div>
+ <div class="settings-form" id="phone-form">
+ <div class="settings-form-inner">
+ <div class="field-group"><label class="field-label">New Phone Number</label><input type="tel" id="cp-new-phone" placeholder="0700012345" maxlength="10" oninput="regPhoneInput(this)"></div>
+ <div class="field-hint">10 digits starting with 0</div>
+ <div class="field-error" id="cp-phone-err">Error</div>
+ <div class="settings-form-actions">
+ <button class="settings-btn-cancel" onclick="toggleSettingsForm('phone')">Cancel</button>
+ <button class="settings-btn-save" onclick="submitChangePhone()">Save</button>
+ </div>
+ </div>
+ </div>
+
+ <div class="settings-row" onclick="toggleSettingsForm('info')"><span class="settings-row-label">Edit Info</span><span class="settings-chevron" id="info-chevron">›</span></div>
+ <div class="settings-form" id="info-form">
+ <div class="settings-form-inner">
+ <div class="field-group"><label class="field-label">Country</label>
+ <select id="cp-country">
+ <option value="UG">+256</option>
+ <option value="KE">+254</option>
+ </select>
+ </div>
+ <div class="settings-form-actions">
+ <button class="settings-btn-cancel" onclick="toggleSettingsForm('info')">Cancel</button>
+ <button class="settings-btn-save" onclick="submitEditInfo()">Save</button>
+ </div>
+ </div>
+ </div>
+ </div>
+
  <button class="logout-btn-new" onclick="doLogout()">Sign Out</button>
  </div>
  </div>
@@ -808,7 +861,15 @@ input[type="password"]{padding-right:46px;}
  <div class="menu-item" onclick="menuNav('reinvest')"><span class="menu-item-icon"></span>Boost</div>
  <div class="menu-item" onclick="menuNav('team')"><span class="menu-item-icon"></span>Team</div>
  <div class="menu-divider"></div>
- <div class="menu-item" onclick="menuNav('history')"><span class="menu-item-icon"></span>History</div>
+ <div class="menu-item" onclick="toggleHistoryMenu()"><span class="menu-item-icon"></span>History<span class="menu-chevron" id="history-menu-chevron">›</span></div>
+ <div class="menu-submenu" id="history-submenu">
+ <div class="menu-subitem" onclick="menuNavHistory('all')">All</div>
+ <div class="menu-subitem" onclick="menuNavHistory('Deposit')">Deposits</div>
+ <div class="menu-subitem" onclick="menuNavHistory('Withdrawal')">Withdrawals</div>
+ <div class="menu-subitem" onclick="menuNavHistory('Profit')">Profits</div>
+ <div class="menu-subitem" onclick="menuNavHistory('Bonus')">Bonuses</div>
+ <div class="menu-subitem" onclick="menuNavHistory('Referral')">Referral</div>
+ </div>
  <div class="menu-item" onclick="menuNav('profile')"><span class="menu-item-icon"></span>Account</div>
  </div>
  <button class="menu-logout" onclick="doLogout()"><span style="font-size:18px"></span>Logout</button>
@@ -1287,6 +1348,24 @@ function switchTab(tab) {
 
 function menuNav(tab) { switchTab(tab); }
 
+function toggleHistoryMenu() {
+ const sub = document.getElementById('history-submenu');
+ const chevron = document.getElementById('history-menu-chevron');
+ if (!sub) return;
+ const isOpen = sub.classList.contains('open');
+ sub.classList.toggle('open', !isOpen);
+ if (chevron) chevron.classList.toggle('open', !isOpen);
+}
+
+function menuNavHistory(filterType) {
+ currentHistoryFilter = filterType;
+ const labels = { all: 'All your transactions', Deposit: 'Showing: Deposits', Withdrawal: 'Showing: Withdrawals', Profit: 'Showing: Profits', Bonus: 'Showing: Bonuses', Referral: 'Showing: Referral' };
+ const labelEl = document.getElementById('history-filter-label');
+ if (labelEl) labelEl.textContent = labels[filterType] || 'All your transactions';
+ switchTab('history');
+ renderHistory();
+}
+
 function startSettingsListener() {
  db.ref('settings').on('value', (snap) => {
  if (snap.exists()) settingsData = { ...settingsData, ...snap.val() };
@@ -1433,10 +1512,91 @@ function updateProfileUI() {
  if (statusEl) {
  const isActive = !!currentUser.activated;
  statusEl.textContent = isActive ? 'Active' : 'Inactive';
- statusEl.style.background = isActive ? 'rgba(52,211,153,.25)' : 'rgba(255,255,255,.15)';
- statusEl.style.borderColor = isActive ? 'rgba(52,211,153,.6)' : 'rgba(255,255,255,.35)';
+ statusEl.style.background = isActive ? 'rgba(16,185,129,.15)' : 'rgba(107,118,144,.15)';
+ statusEl.style.color = isActive ? '#0a8a5f' : '#6b7690';
  }
  document.getElementById('with-phone-display').textContent = currentUser.phone || '—';
+ const cpCountryEl = document.getElementById('cp-country');
+ if (cpCountryEl) cpCountryEl.value = currentUser.country || 'UG';
+}
+
+function toggleSettingsForm(which) {
+ const forms = { pwd: 'pwd-form', phone: 'phone-form', info: 'info-form' };
+ const chevrons = { pwd: 'pwd-chevron', phone: 'phone-chevron', info: 'info-chevron' };
+ Object.keys(forms).forEach(key => {
+ const formEl = document.getElementById(forms[key]);
+ const rowEl = formEl ? formEl.previousElementSibling : null;
+ if (key === which) {
+ const isOpen = formEl.classList.contains('open');
+ formEl.classList.toggle('open', !isOpen);
+ if (rowEl) rowEl.classList.toggle('open', !isOpen);
+ } else {
+ formEl.classList.remove('open');
+ if (rowEl) rowEl.classList.remove('open');
+ }
+ });
+}
+
+function showAccountPopup(msg) {
+ const popup = document.getElementById('popup-banner');
+ if (!popup) return;
+ popup.textContent = msg;
+ popup.classList.add('show');
+ setTimeout(() => popup.classList.remove('show'), 2200);
+}
+
+async function submitChangePassword() {
+ if (!currentUser || !currentUsername) return;
+ clearErrors('cp-pw-err');
+ const oldPw = document.getElementById('cp-old-pw').value;
+ const newPw = document.getElementById('cp-new-pw').value;
+ const confirmPw = document.getElementById('cp-confirm-pw').value;
+ if (!oldPw || oldPw !== currentUser.password) { setErr('cp-pw-err', true, 'Current password is incorrect'); return; }
+ if (!newPw || newPw.length < 6) { setErr('cp-pw-err', true, 'New password must be at least 6 characters'); return; }
+ if (newPw !== confirmPw) { setErr('cp-pw-err', true, 'New passwords do not match'); return; }
+ try {
+ await db.ref('users/' + safeKey(currentUsername)).update({ password: newPw });
+ currentUser.password = newPw;
+ document.getElementById('cp-old-pw').value = '';
+ document.getElementById('cp-new-pw').value = '';
+ document.getElementById('cp-confirm-pw').value = '';
+ toggleSettingsForm('pwd');
+ showAccountPopup('Password updated successfully');
+ } catch (e) {
+ setErr('cp-pw-err', true, 'Could not update password. Please try again.');
+ }
+}
+
+async function submitChangePhone() {
+ if (!currentUser || !currentUsername) return;
+ clearErrors('cp-phone-err');
+ const digits = document.getElementById('cp-new-phone').value.trim();
+ if (!digits || digits.length !== 10 || !digits.startsWith('0')) { setErr('cp-phone-err', true, 'Enter 10 digits starting with 0'); return; }
+ const prefix = currentUser.country === 'KE' ? '+254' : '+256';
+ const fullPhone = prefix + digits.slice(1);
+ try {
+ await db.ref('users/' + safeKey(currentUsername)).update({ phone: fullPhone });
+ currentUser.phone = fullPhone;
+ updateProfileUI();
+ document.getElementById('cp-new-phone').value = '';
+ toggleSettingsForm('phone');
+ showAccountPopup('Phone number updated successfully');
+ } catch (e) {
+ setErr('cp-phone-err', true, 'Could not update phone number. Please try again.');
+ }
+}
+
+async function submitEditInfo() {
+ if (!currentUser || !currentUsername) return;
+ const country = document.getElementById('cp-country').value;
+ try {
+ await db.ref('users/' + safeKey(currentUsername)).update({ country: country });
+ currentUser.country = country;
+ toggleSettingsForm('info');
+ showAccountPopup('Info updated successfully');
+ } catch (e) {
+ showAccountPopup('Could not update info. Please try again.');
+ }
 }
 
 function updateWhatsAppButton() {
@@ -1503,13 +1663,13 @@ function renderHistory() {
  return `<div class="tx-card ${typeClass}">
  <div class="tx-card-header">
  <div class="tx-card-icon">${icon}</div>
- <div>
+ <div style="min-width:0;">
  <div class="tx-card-type">${tx.type || 'Transaction'}</div>
  <div class="tx-card-date">${tx.date || '—'}</div>
  </div>
  </div>
+ <div>
  <div class="tx-card-amount ${amountClass}">${amountStr}</div>
- <div style="display:flex;justify-content:space-between;align-items:center;">
  <span class="tx-card-status ${statusClass}">${statusText}</span>
  </div>
  </div>`;
