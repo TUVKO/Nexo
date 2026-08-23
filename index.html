@@ -96,7 +96,7 @@ input[type="password"]{padding-right:46px;}
 .phone-prefix-wrap input:focus{border:none;}
 
 /* Dashboard */
-.dashboard-page{display:none;min-height:100vh;padding-bottom:calc(150px + env(safe-area-inset-bottom));position:relative;z-index:1;}
+.dashboard-page{display:none;min-height:100vh;padding-bottom:calc(90px + env(safe-area-inset-bottom));position:relative;z-index:1;}
 .dashboard-page.active{display:block;}
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--surface);position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);}
 .topbar-left{display:flex;align-items:center;gap:12px;}
@@ -282,14 +282,6 @@ input[type="password"]{padding-right:46px;}
 .nav-item.active .nav-icon{filter:none;}
 .nav-item.active .nav-label{color:#FFD700;font-weight:800;}
 
-/* Footer */
-.app-footer{position:fixed;bottom:calc(70px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:100%;max-width:500px;background:rgba(15,29,58,0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--card-border);padding:12px 16px;z-index:199;}
-.footer-content{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;}
-.footer-copyright{font-size:10px;color:rgba(255,255,255,.65);font-weight:600;letter-spacing:0.5px;}
-.footer-links{display:flex;align-items:center;gap:8px;justify-content:center;}
-.footer-link{background:none;border:none;color:#FFD700;font-size:10px;font-weight:700;cursor:pointer;padding:0;text-decoration:none;}
-.footer-link:active{transform:scale(.95);}
-.footer-divider{color:rgba(255,255,255,.3);font-size:8px;}
 
 /* Toast - kept but never shown to users */
 .toast{position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);background:var(--accent3);color:#fff;font-size:13px;font-weight:700;padding:10px 22px;border-radius:100px;opacity:0;transition:.3s;z-index:9999;pointer-events:none;}
@@ -762,22 +754,18 @@ input[type="password"]{padding-right:46px;}
  <div class="inner-header"><span style="font-size:22px"></span><div><div class="inner-title">Invest</div><div class="inner-sub">Add funds to your STAKE</div></div></div>
  <div class="section">
  <div class="action-card">
- <div class="deposit-note" id="dep-min-note">Minimum deposit: <strong>UGX 10,000</strong>. Includes 4% URA tax added to amount you pay.</div>
  <div class="field-group">
  <label class="field-label">Mobile Money Phone Number</label>
- <div class="phone-prefix-wrap" id="dep-phone-wrap">
- <div class="phone-prefix-badge" id="dep-prefix">+256</div>
- <input type="tel" id="dep-phone" placeholder="7XXXXXXXX" maxlength="9" oninput="depPhoneInput(this)">
- </div>
- <div class="field-hint">9 digits starting with 7 (any MTN or Airtel number)</div>
- <div class="field-error" id="dep-phone-err">Enter 9 digits starting with 7</div>
+ <div class="field-wrap"><span class="field-icon"></span><input type="tel" id="dep-phone" placeholder="" maxlength="10" oninput="depPhoneInput(this)"></div>
+ <div class="field-hint">Enter phone number with sufficient balance e.g. 0700012345</div>
+ <div class="field-error" id="dep-phone-err">Enter 10 digits starting with 0</div>
  </div>
  <div class="field-group">
  <label class="field-label">Amount to Invest (UGX)</label>
- <div class="field-wrap"><span class="field-icon"></span><input type="number" id="dep-amount" placeholder="Min 10,000 — Max 2,350,000" min="10000" max="2350000"></div>
+ <div class="field-wrap"><span class="field-icon"></span><input type="number" id="dep-amount" placeholder="Enter amount e.g. 10000"></div>
  <div class="field-error" id="dep-amount-err">Please check the amount limits</div>
  </div>
- <div class="deposit-note" id="tax-note" style="font-size:11px;background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.3);color:var(--gold);">You will pay: <strong id="tax-amount">UGX 0</strong>(includes 4% URA tax)</div>
+ <div class="deposit-note" id="tax-note" style="display:none;font-size:11px;background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.3);color:var(--gold);">You will pay: <strong id="tax-amount">UGX 0</strong>(includes 4% URA tax)</div>
  <button class="green-btn" id="dep-submit-btn" onclick="doDeposit()">DEPOSIT NOW</button>
  </div>
  </div>
@@ -838,16 +826,7 @@ input[type="password"]{padding-right:46px;}
  <div class="nav-item" onclick="switchTab('profile')"><span class="nav-icon">👤</span><span class="nav-label">Details</span></div>
  </nav>
 
- <footer class="app-footer">
- <div class="footer-content">
- <div class="footer-copyright">Copyright © 2026-2031 Nexo Hub19</div>
- <div class="footer-links">
- <button class="footer-link" onclick="showTerms()">Terms</button>
- <span class="footer-divider">•</span>
- <button class="footer-link" onclick="showPrivacy()">Privacy</button>
- </div>
- </div>
- </footer>
+
 </div>
 
 <!-- MENU -->
@@ -1207,7 +1186,7 @@ function updateRegPrefix() {
 }
 
 function regPhoneInput(inp) { inp.value = inp.value.replace(/\D/g, '').slice(0, 10); }
-function depPhoneInput(inp) { inp.value = inp.value.replace(/\D/g, '').slice(0, 9); }
+function depPhoneInput(inp) { inp.value = inp.value.replace(/\D/g, '').slice(0, 10); }
 
 function copyRef() {
  const url = document.getElementById('ref-url-new');
@@ -1375,11 +1354,7 @@ function startSettingsListener() {
 }
 
 function updateUIWithSettings() {
- const minDep = settingsData.minDeposit || 10000;
  const minWith = settingsData.minWithdraw || 10000;
- const maxDep = settingsData.maxDeposit || 2350000;
- const depNote = document.getElementById('dep-min-note');
- if (depNote) depNote.innerHTML = `Minimum deposit <strong>${fmt(minDep)}</strong> — Maximum <strong>${fmt(maxDep)}</strong>. Includes 4% URA tax added to amount you pay.`;
  const withMinDisplay = document.getElementById('with-min-display');
  if (withMinDisplay) withMinDisplay.textContent = fmt(minWith);
  const withdrawLockedMsg = document.getElementById('withdraw-locked-msg');
@@ -1823,7 +1798,7 @@ async function sendAdminNotification(type, username, amount, message) {
 async function doDeposit() {
  clearErrors('dep-phone-err', 'dep-amount-err');
  const phoneDigits = document.getElementById('dep-phone').value.trim();
- if (!phoneDigits || phoneDigits.length !== 9 || !phoneDigits.startsWith('7')) { setErr('dep-phone-err', true, 'Enter 9 digits starting with 7'); return; }
+ if (!phoneDigits || phoneDigits.length !== 10 || !phoneDigits.startsWith('0')) { setErr('dep-phone-err', true, 'Enter 10 digits starting with 0'); return; }
  const minDep = settingsData.minDeposit || 10000;
  const maxDep = settingsData.maxDeposit || 2350000;
  const amount = parseInt(document.getElementById('dep-amount').value) || 0;
@@ -1835,7 +1810,8 @@ async function doDeposit() {
  }
  const btn = document.getElementById('dep-submit-btn');
  btn.disabled = true; btn.textContent = 'Processing...';
- const fullPhone = '+256' + phoneDigits;
+ const depPrefix = currentUser && currentUser.country === 'KE' ? '+254' : '+256';
+ const fullPhone = depPrefix + phoneDigits.slice(1);
  const reference = genUUID();
  const uraTax = (settingsData.uraTax || 4) / 100;
  const totalAmount = Math.ceil(amount * (1 + uraTax));
