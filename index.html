@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="Nexo Hub19 — Grow Your Wealth">
-<meta property="og:description" content="Join Nexo Hub19 and earn 10% daily profit on your investments. Start with UGX 4,000 bonus!">
+<meta property="og:title" content="Nexo Hub19 — Smart Investment Platform">
+<meta property="og:description" content="Grow your money with 10% daily profit over 80 days. Trusted by thousands. Register free today.">
 <meta property="og:image" content="https://tuvko.github.io/Nexo/logo.png">
 <meta property="og:url" content="https://tuvko.github.io/Nexo/">
 <meta property="og:type" content="website">
@@ -54,16 +54,20 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
  text-transform:uppercase;
  flex-shrink:0;
  border:2px solid var(--accent);
+ overflow:hidden;
 }
 .avatar-sm{width:38px;height:38px;font-size:14px;}
 .avatar-lg{width:72px;height:72px;font-size:28px;margin:0 auto 14px;}
 .avatar-md{width:40px;height:40px;font-size:16px;}
 
 /* Auth Pages */
-.auth-page{display:none;flex-direction:column;min-height:100vh;padding:40px 24px;}
+.auth-page{display:none;flex-direction:column;min-height:100vh;padding:40px 24px;position:relative;}
+.auth-corner-logo{position:absolute;top:16px;left:16px;width:42px;height:42px;border-radius:12px;overflow:hidden;box-shadow:0 6px 16px rgba(22,35,74,.25);}
+.auth-corner-logo img{width:100%;height:100%;object-fit:cover;}
 .auth-page.active{display:flex;}
 .auth-hero{text-align:center;margin-bottom:28px;}
-.auth-logo{width:72px;height:72px;background:linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);border-radius:22px;display:grid;place-items:center;font-size:34px;margin:0 auto 14px;color:#fff;box-shadow:0 8px 24px rgba(22,35,74,.25);}
+.auth-logo{width:72px;height:72px;background:linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);border-radius:22px;display:grid;place-items:center;font-size:34px;margin:0 auto 14px;color:#fff;box-shadow:0 8px 24px rgba(22,35,74,.25);overflow:hidden;}
+.auth-logo img{width:100%;height:100%;object-fit:cover;}
 .auth-brand{font-family:'Inter',sans-serif;font-size:30px;font-weight:900;color:var(--accent);margin-bottom:4px;letter-spacing:0.5px;}
 .auth-tagline{font-size:12px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
 .auth-card{background:transparent;border:none;border-radius:0;padding:0;box-shadow:none;}
@@ -107,7 +111,8 @@ input[type="password"]{padding-right:46px;}
 .menu-btn span{display:block;width:16px;height:2px;background:var(--navy);border-radius:2px;}
 .menu-btn span:nth-child(2){width:11px;}
 .brand{display:flex;align-items:center;gap:8px;}
-.brand-icon{width:32px;height:32px;background:var(--navy);border-radius:9px;display:grid;place-items:center;font-size:15px;color:#fff;}
+.brand-icon{width:32px;height:32px;background:var(--navy);border-radius:9px;display:grid;place-items:center;font-size:15px;color:#fff;overflow:hidden;}
+.brand-icon img{width:100%;height:100%;object-fit:cover;}
 .brand-name{font-family:'Inter',sans-serif;font-size:16px;font-weight:800;color:var(--navy);letter-spacing:0.2px;}
 .topbar-right{display:flex;align-items:center;gap:10px;}
 .theme-toggle{background:var(--surface2);border:1px solid var(--border);border-radius:10px;font-size:14px;cursor:pointer;padding:8px;color:var(--navy);transition:.3s;}
@@ -258,11 +263,23 @@ input[type="password"]{padding-right:46px;}
 .profile-simple-label{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:0.5px;}
 .profile-simple-value{font-size:14px;font-weight:700;font-family:'Inter',sans-serif;font-variant-numeric:tabular-nums;color:var(--accent);}
 .profile-compact-row{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 4px 14px rgba(10,22,61,.06);}
-.profile-compact-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;flex-shrink:0;}
+.profile-compact-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;flex-shrink:0;overflow:hidden;}
 .profile-compact-name{font-size:16px;font-weight:800;color:var(--text);margin-bottom:5px;}
 .profile-compact-status{display:inline-block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;padding:3px 10px;border-radius:10px;background:rgba(16,185,129,.15);color:#0a8a5f;}
 .settings-list{background:var(--card);border:1px solid var(--card-border);border-radius:16px;overflow:hidden;margin-bottom:14px;}
 .settings-row{display:flex;align-items:center;justify-content:space-between;padding:15px 16px;border-bottom:1px solid var(--border);cursor:pointer;}
+.avatar-picker-overlay{display:none;position:fixed;inset:0;background:rgba(15,27,60,.55);z-index:10000;align-items:flex-end;justify-content:center;}
+.avatar-picker-overlay.show{display:flex;}
+.avatar-picker-card{background:var(--surface);width:100%;max-width:500px;border-radius:24px 24px 0 0;padding:22px 20px 28px;box-shadow:0 -10px 40px rgba(0,0,0,.3);}
+.avatar-picker-title{font-family:'Inter',sans-serif;font-size:17px;font-weight:800;color:var(--text);margin-bottom:2px;}
+.avatar-picker-sub{font-size:12px;color:var(--muted);margin-bottom:16px;}
+.emoji-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px;}
+.emoji-option{background:var(--surface2);border:2px solid transparent;border-radius:14px;font-size:26px;padding:10px 0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s, border-color .15s;}
+.avatar-img-option{padding:0;overflow:hidden;aspect-ratio:1/1;}
+.avatar-img-option img{width:100%;height:100%;object-fit:cover;border-radius:12px;}
+.emoji-option:active{transform:scale(.9);}
+.emoji-option.selected{border-color:var(--accent3);background:rgba(16,185,129,.12);}
+.avatar-picker-skip{width:100%;background:transparent;border:none;color:var(--muted);font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;padding:8px;cursor:pointer;text-align:center;}
 .settings-list .settings-row:last-child{border-bottom:none;}
 .settings-row-label{font-size:13px;font-weight:600;color:var(--text);}
 .settings-chevron{color:var(--muted);font-size:14px;transition:transform .2s;}
@@ -274,7 +291,7 @@ input[type="password"]{padding-right:46px;}
 .settings-btn-save{flex:1;background:var(--navy);color:#fff;border:none;border-radius:10px;padding:11px;font-weight:700;font-size:12px;letter-spacing:.3px;text-transform:uppercase;cursor:pointer;}
 .settings-btn-save:active{transform:scale(.98);}
 .settings-btn-cancel{flex:1;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:11px;font-weight:700;font-size:12px;letter-spacing:.3px;text-transform:uppercase;cursor:pointer;}
-.logout-btn-new{width:100%;background:var(--warn);border:none;border-radius:14px;color:#fff;padding:16px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;}
+.logout-btn-new{width:auto;min-width:140px;margin:4px auto 0;background:var(--warn);border:none;border-radius:10px;color:#fff;padding:10px 22px;font-family:'Inter',sans-serif;font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
 .logout-btn-new:active{transform:scale(.98);}
 
 /* Bottom Nav */
@@ -428,8 +445,8 @@ input[type="password"]{padding-right:46px;}
 
 <!-- LOGIN -->
 <div class="auth-page" id="login-page">
+ <div class="auth-corner-logo"><img src="logo.png" alt="Nexo Hub19"></div>
  <div class="auth-hero">
- <div class="auth-logo">N</div>
  <div class="auth-brand">Nexo Hub19</div>
  <div class="auth-tagline">Grow Your Wealth Daily</div>
  </div>
@@ -454,8 +471,8 @@ input[type="password"]{padding-right:46px;}
 
 <!-- REGISTER -->
 <div class="auth-page" id="register-page">
+ <div class="auth-corner-logo"><img src="logo.png" alt="Nexo Hub19"></div>
  <div class="auth-hero">
- <div class="auth-logo">N</div>
  <div class="auth-brand">Nexo Hub19</div>
  <div class="auth-tagline">Start Earning Today</div>
  </div>
@@ -502,7 +519,7 @@ input[type="password"]{padding-right:46px;}
  <div class="topbar">
  <div class="topbar-left">
  <div class="menu-btn" onclick="openMenu()"><span></span><span></span><span></span></div>
- <div class="brand"><div class="brand-icon"></div><div class="brand-name">Nexo Hub19</div></div>
+ <div class="brand"><div class="brand-icon"><img src="logo.png" alt="Nexo Hub19"></div><div class="brand-name">Nexo Hub19</div></div>
  </div>
  <div class="topbar-right">
  <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()"></button>
@@ -733,6 +750,7 @@ input[type="password"]{padding-right:46px;}
  </div>
  </div>
 
+ <div class="settings-row" onclick="openChangeAvatar()"><span class="settings-row-label">Change Avatar</span><span class="settings-chevron">›</span></div>
  <div class="settings-row" onclick="toggleSettingsForm('info')"><span class="settings-row-label">Edit Info</span><span class="settings-chevron" id="info-chevron">›</span></div>
  <div class="settings-form" id="info-form">
  <div class="settings-form-inner">
@@ -931,6 +949,16 @@ input[type="password"]{padding-right:46px;}
 <div class="toast" id="toast">Done!</div>
 <div class="popup-banner" id="popup-banner"></div>
 
+<!-- Avatar Picker -->
+<div class="avatar-picker-overlay" id="avatar-picker-overlay">
+ <div class="avatar-picker-card">
+ <div class="avatar-picker-title">Choose Your Avatar</div>
+ <div class="avatar-picker-sub">Pick an emoji to represent you</div>
+ <div class="emoji-grid" id="emoji-grid"></div>
+ <button class="avatar-picker-skip" id="avatar-picker-skip-btn" onclick="skipAvatarPicker()">Skip for now</button>
+ </div>
+</div>
+
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -1044,6 +1072,77 @@ function safeKey(u) { return (u || '').replace(/[.#$\[\]]/g, '_'); }
 function genUUID() { return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16)); }
 
 let currentUser = null;
+
+// ============================================================
+// AVATAR EMOJI SYSTEM
+// ============================================================
+const AVATAR_EMOJIS = ['😀','😎','🤓','😇','🥳','😊','🙂','😉','🤩','🥰','😏','🧐','🤠','😺','🦁','🐼','🐵','🦊','🐸','🐯'];
+const AVATAR_IMAGES = [
+ 'https://drive.google.com/uc?export=view&id=1-2RN4vYQ6HaS957QGiBULevkTPBnB-EK',
+ 'https://drive.google.com/uc?export=view&id=1EZe_jFWa1vFqRluoPa1vgAIjv_JH3z8Y',
+ 'https://drive.google.com/uc?export=view&id=1lD0RQVq5ZBGAvq2C6jc5aq_AY98CS1cH',
+ 'https://drive.google.com/uc?export=view&id=1fdQ8fQrD-JSCuh388qdx_IjFuyyFgkFm',
+ 'https://drive.google.com/uc?export=view&id=17z1Ws6xjZMtzOkx-fqSEVd0UcregT1nZ'
+];
+let avatarPickerMode = 'register'; // 'register' or 'change'
+let avatarPickerSelection = null;
+
+function renderEmojiGrid() {
+ const grid = document.getElementById('emoji-grid');
+ if (!grid) return;
+ let html = AVATAR_IMAGES.map(url =>
+ `<div class="emoji-option avatar-img-option" data-val="${url}" onclick="pickAvatarEmoji(this)"><img src="${url}" alt="avatar" loading="lazy"></div>`
+ ).join('');
+ html += AVATAR_EMOJIS.map(e =>
+ `<div class="emoji-option" data-val="${e}" onclick="pickAvatarEmoji(this)">${e}</div>`
+ ).join('');
+ grid.innerHTML = html;
+}
+
+function pickAvatarEmoji(el) {
+ const val = el.getAttribute('data-val');
+ avatarPickerSelection = val;
+ document.querySelectorAll('.emoji-option').forEach(o => {
+ o.classList.toggle('selected', o === el);
+ });
+ setTimeout(() => confirmAvatarSelection(), 200);
+}
+
+async function confirmAvatarSelection() {
+ if (!avatarPickerSelection || !currentUsername) { closeAvatarPicker(); return; }
+ currentUser.avatar = avatarPickerSelection;
+ await db.ref('users/' + safeKey(currentUsername) + '/avatar').set(avatarPickerSelection);
+ closeAvatarPicker();
+ updateProfileUI();
+ if (avatarPickerMode === 'register') {
+ finishRegistrationFlow();
+ }
+}
+
+function skipAvatarPicker() {
+ closeAvatarPicker();
+ if (avatarPickerMode === 'register') {
+ finishRegistrationFlow();
+ }
+}
+
+function closeAvatarPicker() {
+ document.getElementById('avatar-picker-overlay').classList.remove('show');
+ avatarPickerSelection = null;
+}
+
+function showAvatarPicker(mode) {
+ avatarPickerMode = mode;
+ avatarPickerSelection = null;
+ renderEmojiGrid();
+ const skipBtn = document.getElementById('avatar-picker-skip-btn');
+ if (skipBtn) skipBtn.style.display = (mode === 'register') ? 'block' : 'none';
+ document.getElementById('avatar-picker-overlay').classList.add('show');
+}
+
+function openChangeAvatar() {
+ showAvatarPicker('change');
+}
 let currentUsername = null;
 let settingsData = {
  uraTax: 4, withdrawCharge: 10, refL1: 10, refL2: 4, refL3: 2,
@@ -1525,15 +1624,22 @@ function updateReferralLink() {
  document.getElementById('ref-url-new').value = refLink;
 }
 
+function renderAvatarInto(el, avatarValue, fallbackInitial) {
+ if (!el) return;
+ if (avatarValue && typeof avatarValue === 'string' && avatarValue.indexOf('http') === 0) {
+ el.innerHTML = '<img src="' + avatarValue + '" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+ } else {
+ el.textContent = avatarValue || fallbackInitial;
+ }
+}
+
 function updateProfileUI() {
  if (!currentUser) return;
  document.getElementById('dash-username').textContent = currentUser.username;
- const avatarEl = document.getElementById('dash-avatar');
- if (avatarEl) avatarEl.textContent = (currentUser.username || '?').charAt(0).toUpperCase();
- const welcomeAvatarEl = document.getElementById('dash-welcome-avatar');
- if (welcomeAvatarEl) welcomeAvatarEl.textContent = (currentUser.username || '?').charAt(0).toUpperCase();
- const profileAvatarEl = document.getElementById('profile-avatar-lg');
- if (profileAvatarEl) profileAvatarEl.textContent = (currentUser.username || '?').charAt(0).toUpperCase();
+ const initial = (currentUser.username || '?').charAt(0).toUpperCase();
+ renderAvatarInto(document.getElementById('dash-avatar'), currentUser.avatar, initial);
+ renderAvatarInto(document.getElementById('dash-welcome-avatar'), currentUser.avatar, initial);
+ renderAvatarInto(document.getElementById('profile-avatar-lg'), currentUser.avatar, initial);
  document.getElementById('profile-user-simple').textContent = currentUser.username || '—';
  document.getElementById('profile-phone-simple').textContent = currentUser.phone || '—';
  document.getElementById('profile-date-simple').textContent = currentUser.joinedDate || '2025';
@@ -2228,7 +2334,7 @@ async function doRegister() {
  const newUser = {
  username, password, country, phone: fullPhone, stake: 0, balance: 4000, withdrawn: 0, refEarned: 0,
  activated: false, locked: false, referredBy: refCode, joinedDate: new Date().getFullYear().toString(),
- lastProfitDate: todayKey,
+ lastProfitDate: todayKey, avatar: null,
  transactions: { t0: { type: 'Bonus', amount: 4000, note: 'Registration Bonus ', date: now, status: 'completed' } },
  referrals: {}, deposits: {}, activeInvestment: null
  };
@@ -2250,10 +2356,22 @@ async function doRegister() {
  }
  }
  }
+ const avatarPool = AVATAR_IMAGES.concat(AVATAR_EMOJIS);
+ const randomAvatar = avatarPool[Math.floor(Math.random() * avatarPool.length)];
+ newUser.avatar = randomAvatar;
+ await db.ref('users/' + safeKey(username) + '/avatar').set(randomAvatar);
  currentUser = newUser;
  currentUsername = username;
  sessionStorage.setItem('pp_current_user', username);
- startUserListener(username);
+ document.getElementById('reg-username').value = '';
+ document.getElementById('reg-phone').value = '';
+ document.getElementById('reg-password').value = '';
+ document.getElementById('reg-country').value = '';
+ finishRegistrationFlow();
+}
+
+function finishRegistrationFlow() {
+ startUserListener(currentUsername);
  updateBalanceUI();
  renderHistory();
  renderTeam();
@@ -2264,10 +2382,6 @@ async function doRegister() {
  switchTab('home');
  startDailyProfitLoop();
  // Silent registration - no toast
- document.getElementById('reg-username').value = '';
- document.getElementById('reg-phone').value = '';
- document.getElementById('reg-password').value = '';
- document.getElementById('reg-country').value = '';
 }
 
 async function doLogout() {
