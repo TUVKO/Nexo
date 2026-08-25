@@ -5,12 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
 <meta property="og:title" content="Nexo Hub19 — Grow Your Wealth">
 <meta property="og:description" content="Join Nexo Hub19 and earn 10% daily profit on your investments. Start with UGX 4,000 bonus!">
-<meta property="og:image" content="https://profit-pulse.site/logo.png">
-<meta property="og:url" content="https://profit-pulse.site">
+<meta property="og:image" content="https://tuvko.github.io/Nexo/logo.png">
+<meta property="og:url" content="https://tuvko.github.io/Nexo/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://profit-pulse.site/logo.png">
+<meta name="twitter:image" content="https://tuvko.github.io/Nexo/logo.png">
 <title>Nexo Hub19 — Grow Your Wealth</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#16234a">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -157,8 +160,8 @@ input[type="password"]{padding-right:46px;}
 .ref-url{flex:1;font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .copy-btn{background:var(--navy);border:none;border-radius:8px;color:#fff;font-family:'Inter',sans-serif;font-size:11px;font-weight:800;padding:7px 14px;cursor:pointer;}
 .copy-btn:active{transform:scale(.95);}
-.action-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:0;}
-.action-btn{border:none;border-radius:12px;padding:12px 4px;font-family:'Inter',sans-serif;font-size:9.5px;font-weight:700;letter-spacing:.1px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;width:100%;background:var(--navy);color:#fff;transition:transform .2s, filter .2s;box-shadow:0 6px 16px rgba(22,35,74,.18);}
+.action-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;padding:0;}
+.action-btn{border:none;border-radius:12px;padding:10px 2px;font-family:'Inter',sans-serif;font-size:8.5px;font-weight:700;letter-spacing:.1px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;width:100%;background:var(--navy);color:#fff;transition:transform .2s, filter .2s;box-shadow:0 6px 16px rgba(22,35,74,.18);}
 .action-btn:active{transform:scale(.95);filter:brightness(1.15);}
 .btn-icon{font-size:17px;}
 
@@ -562,6 +565,7 @@ input[type="password"]{padding-right:46px;}
  <button class="action-btn" onclick="switchTab('reinvest')"><span class="btn-icon"></span>Re-invest</button>
  <button class="action-btn" onclick="switchTab('history')"><span class="btn-icon"></span>Records</button>
  <button class="action-btn" onclick="switchTab('team')"><span class="btn-icon"></span>Referrals</button>
+ <button class="action-btn" id="app-install-btn" onclick="installApp()"><span class="btn-icon"></span>App</button>
  </div>
  </div>
  <div class="section" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
@@ -948,6 +952,81 @@ const firebaseConfig = {
  appId: "1:1068219704417:web:03f84141bfd5d619d77620",
  databaseURL: "https://nexo-hub19-49ac6-default-rtdb.europe-west1.firebasedatabase.app/"
 };
+
+// ============================================================
+// PWA INSTALL SYSTEM — "App" button auto-installs to home screen
+// ============================================================
+let deferredInstallPrompt = null;
+
+if ('serviceWorker' in navigator) {
+ window.addEventListener('load', () => {
+ navigator.serviceWorker.register('sw.js').catch(() => {});
+ });
+}
+
+window.addEventListener('beforeinstallprompt', (e) => {
+ e.preventDefault();
+ deferredInstallPrompt = e;
+});
+
+window.addEventListener('appinstalled', () => {
+ deferredInstallPrompt = null;
+ const btn = document.getElementById('app-install-btn');
+ if (btn) btn.style.display = 'none';
+});
+
+function isRunningStandalone() {
+ return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+
+function showInstallHint(html) {
+ let hint = document.getElementById('pwa-install-hint');
+ if (!hint) {
+ hint = document.createElement('div');
+ hint.id = 'pwa-install-hint';
+ hint.style.cssText = 'position:fixed;left:16px;right:16px;bottom:90px;z-index:9999;background:var(--navy);color:#fff;padding:14px 16px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.35);font-size:13px;line-height:1.5;max-width:500px;margin:0 auto;';
+ document.body.appendChild(hint);
+ }
+ hint.innerHTML = html;
+ clearTimeout(hint._t);
+ hint._t = setTimeout(() => { hint.remove(); }, 6000);
+}
+
+async function installApp() {
+ if (isRunningStandalone()) {
+ showInstallHint('✅ Nexo Hub19 is already installed on this device.');
+ return;
+ }
+
+ if (deferredInstallPrompt) {
+ deferredInstallPrompt.prompt();
+ const choice = await deferredInstallPrompt.userChoice;
+ deferredInstallPrompt = null;
+ if (choice.outcome === 'accepted') {
+ showInstallHint('📲 Installing Nexo Hub19 to your home screen...');
+ }
+ return;
+ }
+
+ const ua = navigator.userAgent || '';
+ const isIOS = /iPad|iPhone|iPod/.test(ua);
+ const isSafari = isIOS && /Safari/.test(ua) && !/CriOS|FxiOS/.test(ua);
+
+ if (isIOS && isSafari) {
+ showInstallHint('📲 To install: tap the <b>Share</b> icon below, then <b>"Add to Home Screen"</b>.');
+ } else if (isIOS) {
+ showInstallHint('📲 Open this page in <b>Safari</b>, tap Share, then "Add to Home Screen".');
+ } else {
+ showInstallHint('Your browser doesn\\'t support one-tap install here. Open the ⋮ menu and choose "Add to Home screen" or "Install app".');
+ }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+ if (isRunningStandalone()) {
+ const btn = document.getElementById('app-install-btn');
+ if (btn) btn.style.display = 'none';
+ }
+});
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
