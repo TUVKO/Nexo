@@ -957,6 +957,7 @@ const firebaseConfig = {
 // PWA INSTALL SYSTEM — "App" button auto-installs to home screen
 // ============================================================
 let deferredInstallPrompt = null;
+let installPromptFiredAt = null;
 
 if ('serviceWorker' in navigator) {
  window.addEventListener('load', () => {
@@ -967,6 +968,7 @@ if ('serviceWorker' in navigator) {
 window.addEventListener('beforeinstallprompt', (e) => {
  e.preventDefault();
  deferredInstallPrompt = e;
+ installPromptFiredAt = new Date().toLocaleTimeString();
 });
 
 window.addEventListener('appinstalled', () => {
@@ -1056,6 +1058,15 @@ async function installApp() {
  diag.push('SW registered: ' + (reg ? 'yes' : 'no'));
  } else {
  diag.push('serviceWorker unsupported in this browser');
+ }
+
+ diag.push('beforeinstallprompt fired: ' + (installPromptFiredAt ? ('yes at ' + installPromptFiredAt) : 'NO'));
+
+ if (navigator.getInstalledRelatedApps) {
+ try {
+ const related = await navigator.getInstalledRelatedApps();
+ diag.push('Already installed (per Chrome): ' + (related.length ? 'YES' : 'no'));
+ } catch(e) {}
  }
 
  showInstallHint('Install not ready yet.<br><small>' + diag.join('<br>') + '</small><br>Open the &#8942; menu and check for "Install app".');
