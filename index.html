@@ -989,7 +989,7 @@ function showInstallHint(html) {
  }
  hint.innerHTML = html;
  clearTimeout(hint._t);
- hint._t = setTimeout(() => { hint.remove(); }, 6000);
+ hint._t = setTimeout(() => { hint.remove(); }, 12000);
 }
 
 async function installApp() {
@@ -1025,11 +1025,40 @@ async function installApp() {
 
  if (isIOS && isSafari) {
  showInstallHint('📲 To install: tap the <b>Share</b> icon below, then <b>"Add to Home Screen"</b>.');
+ return;
  } else if (isIOS) {
  showInstallHint('📲 Open this page in <b>Safari</b>, tap Share, then "Add to Home Screen".');
- } else {
- showInstallHint("Install isn't available yet — make sure you're on the live site (not a preview), then reload the page and try again. Or open the &#8942; menu and choose \"Add to Home screen\".");
+ return;
  }
+
+ // Self-diagnose why the native prompt never became available
+ let diag = [];
+ try {
+ const mRes = await fetch('manifest.json', { cache: 'no-store' });
+ diag.push('manifest.json: ' + (mRes.ok ? ('OK, ' + mRes.headers.get('content-type')) : ('FAILED ' + mRes.status)));
+ if (mRes.ok) {
+ try {
+ const mJson = await mRes.json();
+ if (!mJson.icons || !mJson.icons.length) diag.push('manifest missing icons');
+ if (!mJson.start_url) diag.push('manifest missing start_url');
+ if (!mJson.name && !mJson.short_name) diag.push('manifest missing name');
+ } catch(e) { diag.push('manifest.json is not valid JSON'); }
+ }
+ } catch(e) { diag.push('manifest.json: fetch error'); }
+
+ try {
+ const sRes = await fetch('sw.js', { cache: 'no-store' });
+ diag.push('sw.js: ' + (sRes.ok ? 'OK' : ('FAILED ' + sRes.status)));
+ } catch(e) { diag.push('sw.js: fetch error'); }
+
+ if (navigator.serviceWorker) {
+ const reg = await navigator.serviceWorker.getRegistration();
+ diag.push('SW registered: ' + (reg ? 'yes' : 'no'));
+ } else {
+ diag.push('serviceWorker unsupported in this browser');
+ }
+
+ showInstallHint('Install not ready yet.<br><small>' + diag.join('<br>') + '</small><br>Open the &#8942; menu and check for "Install app".');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
