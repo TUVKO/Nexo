@@ -998,6 +998,17 @@ async function installApp() {
  return;
  }
 
+ // If Chrome hasn't fired beforeinstallprompt yet, wait briefly — it can arrive
+ // a second or two after page load depending on network/device speed.
+ if (!deferredInstallPrompt) {
+ await new Promise((resolve) => {
+ const check = setInterval(() => {
+ if (deferredInstallPrompt) { clearInterval(check); resolve(); }
+ }, 200);
+ setTimeout(() => { clearInterval(check); resolve(); }, 2500);
+ });
+ }
+
  if (deferredInstallPrompt) {
  deferredInstallPrompt.prompt();
  const choice = await deferredInstallPrompt.userChoice;
@@ -1017,7 +1028,7 @@ async function installApp() {
  } else if (isIOS) {
  showInstallHint('📲 Open this page in <b>Safari</b>, tap Share, then "Add to Home Screen".');
  } else {
- showInstallHint("Your browser doesn't support one-tap install here. Open the &#8942; menu and choose \"Add to Home screen\" or \"Install app\".");
+ showInstallHint("Install isn't available yet — make sure you're on the live site (not a preview), then reload the page and try again. Or open the &#8942; menu and choose \"Add to Home screen\".");
  }
 }
 
