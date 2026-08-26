@@ -595,17 +595,6 @@ input[type="password"]{padding-right:46px;}
  </div>
  </div>
 
- <!-- Active Investment Display -->
- <div class="section" id="active-investment-section" style="display:none;">
- <div class="investment-card">
- <div class="investment-title">ACTIVE INVESTMENT</div>
- <div class="investment-amount" id="active-stake-amount">UGX 0</div>
- <div class="investment-progress"><div class="investment-progress-fill" id="investment-progress-fill" style="width:0%"></div></div>
- <div class="investment-days"><span id="days-completed">0</span><span>Day 80</span></div>
- <div class="investment-status" id="investment-status">Generating 10% daily profit</div>
- </div>
- </div>
-
  <div class="section">
  <div class="action-grid">
  <button class="action-btn" onclick="switchTab('deposit')"><span class="btn-icon"></span>Invest</button>
@@ -1617,26 +1606,9 @@ function updateBalanceUI() {
 }
 
 function updateActiveInvestmentDisplay() {
- const section = document.getElementById('active-investment-section');
- if (!currentUser || !currentUser.activeInvestment || (currentUser.stake || 0) === 0) {
- if (section) section.style.display = 'none';
+ // Active Investment card removed from Home dashboard - function kept as no-op
+ // to avoid breaking any code that still calls it.
  return;
- }
- const inv = currentUser.activeInvestment;
- const stakeAmount = currentUser.stake || 0;
- const daysRun = inv.daysRun || 0;
- const totalDays = 80;
- const progress = (daysRun / totalDays) * 100;
- document.getElementById('active-stake-amount').textContent = fmt(stakeAmount);
- document.getElementById('investment-progress-fill').style.width = progress + '%';
- document.getElementById('days-completed').textContent = daysRun;
- if (daysRun >= totalDays) {
- document.getElementById('investment-status').textContent = 'Investment completed! Re-invest to continue earning.';
- } else {
- const remaining = totalDays - daysRun;
- document.getElementById('investment-status').textContent = `Generating 10% daily profit — ${remaining} days remaining`;
- }
- if (section) section.style.display = 'block';
 }
 
 function startUserListener(username) {
@@ -1992,7 +1964,8 @@ async function checkPendingDeposits(username) {
  await userRef.update({ 
  stake: newStake, 
  balance: newBalance,
- activeInvestment: { amount: newStake, startDate: dateStr(), daysLeft: 80, dailyProfit: 0 }
+ activeInvestment: { amount: newStake, startDate: dateStr(), daysLeft: 80, dailyProfit: 0 },
+ lastProfitDate: getDateKey(new Date())
  });
  
  // Update UI silently if user is currently viewing
@@ -2318,7 +2291,7 @@ async function doReinvest() {
  newActiveInvestment.amount = newStake;
  }
  const updates = {
- stake: newStake, balance: newBalance, activated: true, activeInvestment: newActiveInvestment,
+ stake: newStake, balance: newBalance, activated: true, activeInvestment: newActiveInvestment, lastProfitDate: todayKey,
  [`deposits/dep_reinvest_${Date.now()}`]: { amount, startDate: Date.now(), daysRun: 0, lastPaidDate: todayKey },
  [`transactions/tx_reinvest_a_${Date.now()}`]: { type: 'Re-Invest', amount: -amount, note: 'Moved from BALANCE to STAKE', date: now, status: 'completed' },
  [`transactions/tx_reinvest_b_${Date.now()}`]: { type: 'Profit', amount: profit, note: '10% instant profit on re-invest', date: now, status: 'completed' }

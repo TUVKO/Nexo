@@ -848,6 +848,7 @@ async function saveEditUser() {
  const instantProfit = Math.floor(addedAmount * 0.10);
  updates.balance = newBalance + instantProfit;
  const todayKey = new Date().toISOString().slice(0, 10);
+ updates.lastProfitDate = todayKey;
  const depKey = 'dep_' + Date.now();
  updates['deposits/' + depKey] = {
  amount: addedAmount,
