@@ -1175,7 +1175,7 @@ let currentUsername = null;
 let settingsData = {
  uraTax: 4, withdrawCharge: 10, refL1: 10, refL2: 4, refL3: 2,
  waGroup: '', waSupport: '', telegramGroup: '', withdrawLocked: false, withdrawApproval: false,
- minDeposit: 10000, maxDeposit: 2350000, minWithdraw: 10000, waNumber: '700000000', marzApiKey: ''
+ minDeposit: 10000, maxDeposit: 2350000, minWithdraw: 10000, waNumber: '', marzApiKey: ''
 };
 let profitInterval = null;
 let userListener = null;
@@ -1602,6 +1602,19 @@ function updateBalanceUI() {
  document.getElementById('stat-balance').textContent = fmt(balance);
  document.getElementById('stat-withdrawn').textContent = fmt(withdrawn);
  document.getElementById('reinvest-balance-display').textContent = fmt(balance);
+
+ // Total Earnings = registration Bonus + all Profit payouts + all Referral bonuses
+ let totalEarnings = 0;
+ if (currentUser.transactions) {
+ Object.values(currentUser.transactions).forEach(tx => {
+ if (tx.type === 'Bonus' || tx.type === 'Profit' || tx.type === 'Referral') {
+ totalEarnings += tx.amount;
+ }
+ });
+ }
+ const earnEl = document.getElementById('stat-earnings');
+ if (earnEl) earnEl.textContent = fmt(totalEarnings);
+
  updateActiveInvestmentDisplay();
 }
 
@@ -1747,11 +1760,15 @@ async function submitEditInfo() {
 
 function updateWhatsAppButton() {
  const waBtn = document.getElementById('whatsapp-float-btn');
- if (waBtn && currentUser) {
- const phone = settingsData.waNumber || '700000000';
- const message = `Hey, I'm ${currentUser.username}, I need assistance with my Nexo Hub19 investment account. Please help me! `;
- waBtn.href = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+ if (!waBtn || !currentUser) return;
+ const phone = settingsData.waNumber;
+ if (!phone) {
+ waBtn.style.display = 'none';
+ return;
  }
+ waBtn.style.display = '';
+ const message = `Hey! ${currentUser.username} here 😊 Quick help needed with my Nexo Hub19 account, please!`;
+ waBtn.href = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 }
 
 let currentHistoryFilter = 'all';
@@ -1830,8 +1847,6 @@ function renderTeam() {
  Object.values(currentUser.transactions).forEach(tx => { if (tx.type === 'Referral') totalRefBonus += tx.amount; });
  }
  document.getElementById('total-ref-earned-new').textContent = fmt(totalRefBonus);
- const earnEl = document.getElementById('stat-earnings');
- if (earnEl) earnEl.textContent = fmt(totalRefBonus);
  const refs = currentUser.referrals ? Object.values(currentUser.referrals) : [];
  document.getElementById('ref-team-count').textContent = refs.length;
 
@@ -2245,9 +2260,11 @@ async function processWithdrawalToMarz(reqKey, userPhone, sendAmount, reference,
  const userSnap = await db.ref('users/' + userId).get();
  const user = userSnap.val();
  const refundedBalance = (user.balance || 0) + amount;
+ const revertedWithdrawn = Math.max(0, (user.withdrawn || 0) - amount);
  
  await db.ref('users/' + userId).update({ 
  balance: refundedBalance,
+ withdrawn: revertedWithdrawn,
  [`transactions/${txKey}`]: { type: 'Withdrawal', amount: -amount, note: 'Withdrawal Failed - Refunded', date: dateStr(), status: 'failed' }
  });
  await db.ref('pendingWithdrawals/' + reqKey).update({ status: 'failed', processed: true });
@@ -2259,9 +2276,11 @@ async function processWithdrawalToMarz(reqKey, userPhone, sendAmount, reference,
  const userSnap = await db.ref('users/' + userId).get();
  const user = userSnap.val();
  const refundedBalance = (user.balance || 0) + amount;
+ const revertedWithdrawn = Math.max(0, (user.withdrawn || 0) - amount);
  
  await db.ref('users/' + userId).update({ 
  balance: refundedBalance,
+ withdrawn: revertedWithdrawn,
  [`transactions/${txKey}`]: { type: 'Withdrawal', amount: -amount, note: 'Withdrawal Failed - Refunded', date: dateStr(), status: 'failed' }
  });
  await db.ref('pendingWithdrawals/' + reqKey).update({ status: 'failed', processed: true });

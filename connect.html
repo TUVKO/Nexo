@@ -285,15 +285,15 @@ tbody td{padding:13px 16px;font-size:13px;vertical-align:middle;}
  <div class="sidebar-sub">Command Center</div>
  </div>
  <div class="sidebar-nav">
- <div class="nav-item active" onclick="showPage('pg-dashboard')"><span class="nav-icon"></span><span>Dashboard</span></div>
- <div class="nav-item" onclick="showPage('pg-users')"><span class="nav-icon"></span><span>Users</span></div>
- <div class="nav-item" onclick="showPage('pg-tube')"><span class="nav-icon"></span><span>Investors</span></div>
- <div class="nav-item" onclick="showPage('pg-transactions')"><span class="nav-icon"></span><span>Transactions</span></div>
- <div class="nav-item" onclick="showPage('pg-withdrawals')"><span class="nav-icon"></span><span>Withdrawals</span><span class="nav-badge" id="withdrawals-nav-badge">0</span></div>
- <div class="nav-item" onclick="showPage('pg-debit')"><span class="nav-icon"></span><span>Debit User</span></div>
- <div class="nav-item" onclick="showPage('pg-sog')"><span class="nav-icon"></span><span>SOG</span></div>
- <div class="nav-item" onclick="showPage('pg-settings')"><span class="nav-icon"></span><span>Settings</span></div>
- <div class="nav-item" onclick="showPage('pg-admin-withdraw')"><span class="nav-icon"></span><span>Admin Withdraw</span></div>
+ <div class="nav-item active" onclick="showPage('pg-dashboard')"><span class="nav-icon">📊</span><span>Dashboard</span></div>
+ <div class="nav-item" onclick="showPage('pg-users')"><span class="nav-icon">👥</span><span>Users</span></div>
+ <div class="nav-item" onclick="showPage('pg-tube')"><span class="nav-icon">📈</span><span>Investors</span></div>
+ <div class="nav-item" onclick="showPage('pg-transactions')"><span class="nav-icon">💳</span><span>Transactions</span></div>
+ <div class="nav-item" onclick="showPage('pg-withdrawals')"><span class="nav-icon">💸</span><span>Withdrawals</span><span class="nav-badge" id="withdrawals-nav-badge">0</span></div>
+ <div class="nav-item" onclick="showPage('pg-debit')"><span class="nav-icon">➖</span><span>Debit User</span></div>
+ <div class="nav-item" onclick="showPage('pg-sog')"><span class="nav-icon">🔍</span><span>SOG</span></div>
+ <div class="nav-item" onclick="showPage('pg-settings')"><span class="nav-icon">⚙️</span><span>Settings</span></div>
+ <div class="nav-item" onclick="showPage('pg-admin-withdraw')"><span class="nav-icon">🏧</span><span>Admin Withdraw</span></div>
  </div>
  <div class="sidebar-footer">
  <button class="logout-btn" onclick="adminLogout()">Logout</button>
@@ -660,7 +660,7 @@ let allSettings = {
  uraTax: 4,
  withdrawCharge: 10,
  refL1: 10, refL2: 4, refL3: 2,
- waGroup: '', waSupport: '', waNumber: '700000000',
+ waGroup: '', waSupport: '', waNumber: '',
  withdrawLocked: false,
  withdrawApproval: false,
  minDeposit: 10000,
@@ -683,6 +683,7 @@ let usersUnsubscribe = null;
 let settingsUnsubscribe = null;
 let withdrawalsUnsubscribe = null;
 let adminTxUnsubscribe = null;
+let cleanupInterval = null;
 
 function fmt(n) { return 'UGX ' + Number(n || 0).toLocaleString(); }
 function dateStr() { const d = new Date(); return d.toLocaleDateString('en-UG', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + d.toLocaleTimeString('en-UG', { hour: '2-digit', minute: '2-digit' }); }
@@ -728,6 +729,62 @@ function startRealtimeListeners() {
  
  startNotifListener();
  loadAwHistory();
+
+ // Auto-cleanup: notifications older than 12h, admin transactions older than 10h
+ cleanupOldNotificationsAndTransactions();
+ if (cleanupInterval) clearInterval(cleanupInterval);
+ cleanupInterval = setInterval(cleanupOldNotificationsAndTransactions, 15 * 60 * 1000); // recheck every 15 min
+}
+
+// ============================================================
+// AUTO-CLEANUP: permanently deletes old adminNotifications (>12h)
+// and adminTransactions (>10h) from the database, not just the UI.
+// Timestamps are extracted from the trailing ms value embedded in
+// each record's key (e.g. notif_1729999999999, adm_wd_1729999999999).
+// ============================================================
+function extractKeyTimestamp(key) {
+ const match = key.match(/(\d+)$/);
+ return match ? parseInt(match[1]) : null;
+}
+
+async function cleanupOldNotificationsAndTransactions() {
+ const now = Date.now();
+ const NOTIF_MAX_AGE = 12 * 60 * 60 * 1000; // 12 hours
+ const TX_MAX_AGE = 10 * 60 * 60 * 1000; // 10 hours
+
+ try {
+ const notifSnap = await db.ref('adminNotifications').get();
+ if (notifSnap.exists()) {
+ const notifs = notifSnap.val();
+ const updates = {};
+ for (const key of Object.keys(notifs)) {
+ const ts = extractKeyTimestamp(key);
+ if (ts && (now - ts) > NOTIF_MAX_AGE) {
+ updates[key] = null;
+ }
+ }
+ if (Object.keys(updates).length) {
+ await db.ref('adminNotifications').update(updates);
+ }
+ }
+ } catch (e) { console.warn('Notification cleanup error:', e); }
+
+ try {
+ const txSnap = await db.ref('adminTransactions').get();
+ if (txSnap.exists()) {
+ const txs = txSnap.val();
+ const updates = {};
+ for (const key of Object.keys(txs)) {
+ const ts = extractKeyTimestamp(key);
+ if (ts && (now - ts) > TX_MAX_AGE) {
+ updates[key] = null;
+ }
+ }
+ if (Object.keys(updates).length) {
+ await db.ref('adminTransactions').update(updates);
+ }
+ }
+ } catch (e) { console.warn('Admin transaction cleanup error:', e); }
 }
 
 function renderDashboard() {
@@ -1094,9 +1151,11 @@ async function approveWithdrawal(reqKey, userId, username, amount, sendAmount) {
  const userSnap = await db.ref('users/' + userId).get();
  const user = userSnap.val();
  const refundedBalance = (user.balance || 0) + amount;
+ const revertedWithdrawn = Math.max(0, (user.withdrawn || 0) - amount);
  
  await db.ref('users/' + userId).update({
  balance: refundedBalance,
+ withdrawn: revertedWithdrawn,
  ['transactions/' + txKey + '/status']: 'failed',
  ['transactions/' + txKey + '/note']: 'Withdrawal Failed at Marz - Refunded'
  });
@@ -1119,9 +1178,11 @@ async function approveWithdrawal(reqKey, userId, username, amount, sendAmount) {
  const userSnap = await db.ref('users/' + userId).get();
  const user = userSnap.val();
  const refundedBalance = (user.balance || 0) + amount;
+ const revertedWithdrawn = Math.max(0, (user.withdrawn || 0) - amount);
  
  await db.ref('users/' + userId).update({
  balance: refundedBalance,
+ withdrawn: revertedWithdrawn,
  ['transactions/' + txKey + '/status']: 'failed',
  ['transactions/' + txKey + '/note']: 'Withdrawal Error - Refunded'
  });
@@ -1153,12 +1214,14 @@ async function rejectWithdrawal(reqKey, userId, username, amount) {
  const userSnap = await db.ref('users/' + userId).get();
  const user = userSnap.val();
  const newBalance = (user.balance || 0) + amount;
+ const revertedWithdrawn = Math.max(0, (user.withdrawn || 0) - amount);
  const txKey = allWithdrawals[reqKey]?.txKey;
  const adminTxKey = allWithdrawals[reqKey]?.adminTxKey;
  
  // Refund to user
  await db.ref('users/' + userId).update({
  balance: newBalance,
+ withdrawn: revertedWithdrawn,
  ['transactions/' + txKey + '/status']: 'failed',
  ['transactions/' + txKey + '/note']: 'Withdrawal Rejected - Amount refunded'
  });
@@ -1317,7 +1380,7 @@ function loadSettingsUI() {
  const s = allSettings;
  document.getElementById('wa-group-input').value = s.waGroup || '';
  document.getElementById('wa-support-input').value = s.waSupport || '';
- document.getElementById('wa-number-input').value = s.waNumber || '700000000';
+ document.getElementById('wa-number-input').value = s.waNumber || '';
  document.getElementById('ura-tax-input').value = s.uraTax || 4;
  document.getElementById('with-charge-input').value = s.withdrawCharge || 10;
  document.getElementById('ref-l1-input').value = s.refL1 || 10;
