@@ -1233,11 +1233,20 @@ async function calculateAndPayDailyProfits() {
  let updatedActiveInvestment = userData.activeInvestment || { daysRun: 0 };
  updatedActiveInvestment.daysRun = newDaysRun;
  
- // STEP 9: ATOMIC UPDATE - write everything together
+ // STEP 9: ATOMIC UPDATE - write everything together, including a transaction
+ // record so this daily profit is counted in Earnings and shown in History
+ const txKey = 'tx_dailyprofit_' + Date.now();
  const updates = {
  balance: newBalance,
  lastProfitDate: todayKey,
- activeInvestment: updatedActiveInvestment
+ activeInvestment: updatedActiveInvestment,
+ [`transactions/${txKey}`]: {
+ type: 'Profit',
+ amount: totalProfit,
+ note: daysDiff > 1 ? `10% daily profit (${daysDiff} days)` : '10% daily profit',
+ date: dateStr(),
+ status: 'completed'
+ }
  };
  
  await userRef.update(updates);
