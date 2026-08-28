@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta property="og:title" content="Nexo Hub19 Command Center">
+<meta property="og:title" content="Nexo Hub19 investment Command Center">
 <meta property="og:description" content="Admin dashboard for Nexo Hub19 investment platform">
 <meta property="og:image" content="https://profit-pulse.site/logo.png">
 <meta property="og:url" content="https://profit-pulse.site/connect.html">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://profit-pulse.site/logo.png">
-<title>Nexo Hub19 Command Center</title>
+<title>Nexo Hub19 investment Command Center</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
@@ -179,7 +179,7 @@ tbody td{padding:13px 16px;font-size:13px;vertical-align:middle;}
 <body>
 
 <div class="loading-screen" id="loading-screen">
- <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--accent);margin-bottom:8px;">Nexo Hub19</div>
+ <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--accent);margin-bottom:8px;">Nexo Hub19 investment</div>
  <div class="loading-spinner"></div>
 </div>
 
@@ -189,7 +189,7 @@ tbody td{padding:13px 16px;font-size:13px;vertical-align:middle;}
  <div class="auth-card" id="login-form" style="display:block;">
  <div class="auth-logo">
  <div class="auth-logo-icon"></div>
- <div class="auth-title">Nexo Hub19</div>
+ <div class="auth-title">Nexo Hub19 investment</div>
  <div class="auth-sub">Command Center Login</div>
  </div>
  <div class="f-group">
@@ -281,7 +281,7 @@ tbody td{padding:13px 16px;font-size:13px;vertical-align:middle;}
 <div class="admin-wrap" id="admin-wrap">
  <div class="sidebar">
  <div class="sidebar-brand">
- <div class="sidebar-brand-name">Nexo Hub19</div>
+ <div class="sidebar-brand-name">Nexo Hub19 investment</div>
  <div class="sidebar-sub">Command Center</div>
  </div>
  <div class="sidebar-nav">
@@ -589,7 +589,7 @@ tbody td{padding:13px 16px;font-size:13px;vertical-align:middle;}
 
 <footer class="admin-footer">
  <div class="admin-footer-content">
- <div class="admin-footer-copyright">Copyright © 2026-2031 Nexo Hub19</div>
+ <div class="admin-footer-copyright">Copyright © 2026-2031 Nexo Hub19 investment</div>
  <div class="admin-footer-links">
  <button class="admin-footer-link" onclick="showTerms()">Terms</button>
  <span class="admin-footer-divider">•</span>
@@ -881,6 +881,43 @@ function openEditModal(username) {
 
 function closeEditModal() { document.getElementById('edit-modal').style.display = 'none'; }
 
+async function creditReferralBonusesAdmin(depositorUsername, amount) {
+ const depositorSnap = await db.ref('users/' + safeKey(depositorUsername)).get();
+ if (!depositorSnap.exists()) return;
+ const depositor = depositorSnap.val();
+ if (!depositor.referredBy) return;
+ const pctL1 = (allSettings.refL1 || 10) / 100;
+ const pctL2 = (allSettings.refL2 || 4) / 100;
+ const pctL3 = (allSettings.refL3 || 2) / 100;
+ let uplineUsername = depositor.referredBy;
+ for (let i = 0; i < 3; i++) {
+ if (!uplineUsername) break;
+ const uplineSnap = await db.ref('users/' + safeKey(uplineUsername)).get();
+ if (!uplineSnap.exists()) break;
+ const upline = uplineSnap.val();
+ const bonus = Math.floor(amount * (i === 0 ? pctL1 : i === 1 ? pctL2 : pctL3));
+ if (bonus > 0) {
+ const levelLabel = i === 0 ? 'L1' : i === 1 ? 'L2' : 'L3';
+ const txKey = `tx_refbonus_admin_${i}_${Date.now()}`;
+ const updates = {
+ balance: (upline.balance || 0) + bonus,
+ refEarned: (upline.refEarned || 0) + bonus,
+ [`transactions/${txKey}`]: {
+ type: 'Referral',
+ amount: bonus,
+ note: `${levelLabel} referral bonus from ${depositorUsername}`,
+ date: dateStr(),
+ status: 'completed'
+ }
+ };
+ const refSnap = await db.ref('users/' + safeKey(uplineUsername) + '/referrals/' + safeKey(depositorUsername)).get();
+ if (refSnap.exists()) updates[`referrals/${safeKey(depositorUsername)}/invested`] = (refSnap.val().invested || 0) + amount;
+ await db.ref('users/' + safeKey(uplineUsername)).update(updates);
+ }
+ uplineUsername = upline.referredBy || null;
+ }
+}
+
 async function saveEditUser() {
  const username = document.getElementById('edit-username').value;
  const newPassword = document.getElementById('edit-password').value;
@@ -930,6 +967,10 @@ async function saveEditUser() {
  }
  
  await db.ref('users/' + sk).update(updates);
+ if (newStake > (user.stake || 0)) {
+ const addedAmount = newStake - (user.stake || 0);
+ await creditReferralBonusesAdmin(username, addedAmount);
+ }
  closeEditModal();
  toast('User ' + username + ' updated');
 }
@@ -1134,7 +1175,7 @@ async function approveWithdrawal(reqKey, userId, username, amount, sendAmount) {
  
  // Now attempt to send via Marz (same as automatic mode)
  try {
- const sendResult = await marzSend(userPhone, sendAmount, reference, 'Nexo Hub19 Withdrawal');
+ const sendResult = await marzSend(userPhone, sendAmount, reference, 'Nexo Hub19 investment Withdrawal');
  
  if (sendResult && sendResult.status === 'success') {
  // Success - update transaction and admin record
@@ -1580,7 +1621,7 @@ async function processAdminWithdraw() {
  const now = dateStr();
  
  try {
- const res = await marzSend(phone, amount, reference, 'Nexo Hub19 Admin Withdrawal');
+ const res = await marzSend(phone, amount, reference, 'Nexo Hub19 investment Admin Withdrawal');
  if (res && res.status === 'success') {
  resultDiv.style.display = 'block';
  resultDiv.style.background = 'rgba(52,211,153,.12)';
@@ -1961,15 +2002,15 @@ function showTerms() {
  Swal.fire({
  title: 'Terms of Service',
  html: `<div style="text-align:left;font-size:13px;line-height:1.6;max-height:400px;overflow-y:auto;">
- <p><strong>1. Introduction</strong><br>Welcome to Nexo Hub19. These Terms of Service govern your use of our investment platform.</p>
+ <p><strong>1. Introduction</strong><br>Welcome to Nexo Hub19 investment. These Terms of Service govern your use of our investment platform.</p>
  
  <p><strong>2. User Responsibilities</strong><br>You are responsible for maintaining the confidentiality of your account and password. You agree to accept responsibility for all activities that occur under your account.</p>
  
- <p><strong>3. Investment Risks</strong><br>All investments carry risk. Nexo Hub19 does not guarantee returns. Past performance is not indicative of future results.</p>
+ <p><strong>3. Investment Risks</strong><br>All investments carry risk. Nexo Hub19 investment does not guarantee returns. Past performance is not indicative of future results.</p>
  
- <p><strong>4. Prohibited Activities</strong><br>You may not use Nexo Hub19 for any illegal activities, fraud, or unauthorized access.</p>
+ <p><strong>4. Prohibited Activities</strong><br>You may not use Nexo Hub19 investment for any illegal activities, fraud, or unauthorized access.</p>
  
- <p><strong>5. Limitation of Liability</strong><br>Nexo Hub19 is provided "as is" without warranties. We are not liable for any indirect or consequential damages.</p>
+ <p><strong>5. Limitation of Liability</strong><br>Nexo Hub19 investment is provided "as is" without warranties. We are not liable for any indirect or consequential damages.</p>
  
  <p><strong>6. Modifications</strong><br>We reserve the right to modify these terms at any time. Your continued use constitutes acceptance of changes.</p>
  
