@@ -64,6 +64,12 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .auth-page{display:none;flex-direction:column;min-height:100vh;padding:40px 24px;position:relative;}
 .auth-corner-logo{position:absolute;top:16px;left:16px;width:42px;height:42px;border-radius:12px;overflow:hidden;box-shadow:0 6px 16px rgba(22,35,74,.25);}
 .auth-corner-logo img{width:100%;height:100%;object-fit:cover;}
+.auth-plan-btn{position:absolute;top:16px;right:16px;background:var(--navy);color:#fff;border:none;border-radius:10px;padding:9px 16px;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;cursor:pointer;box-shadow:0 6px 16px rgba(22,35,74,.25);z-index:5;}
+.plan-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10001;align-items:center;justify-content:center;padding:20px;}
+.plan-modal-overlay.show{display:flex;}
+.plan-modal-card{background:#0f0f0f;border-radius:16px;max-width:480px;width:100%;max-height:80vh;overflow-y:auto;position:relative;box-shadow:0 20px 50px rgba(0,0,0,.5);}
+.plan-modal-close{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;border:none;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;}
+.plan-modal-header{background:linear-gradient(135deg,#f5a623,#e08e0b);color:#1a1a1a;text-align:center;font-weight:800;font-size:13px;padding:16px 40px 14px 16px;line-height:1.4;}
 .auth-page.active{display:flex;}
 .auth-hero{text-align:center;margin-bottom:28px;}
 .auth-logo{width:72px;height:72px;background:linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);border-radius:22px;display:grid;place-items:center;font-size:34px;margin:0 auto 14px;color:#fff;box-shadow:0 8px 24px rgba(22,35,74,.25);overflow:hidden;}
@@ -502,6 +508,7 @@ input[type="password"]{padding-right:46px;}
 <!-- REGISTER -->
 <div class="auth-page" id="register-page">
  <div class="auth-corner-logo"><img src="logo.png" alt="Nexo Hub19 investment"></div>
+ <button class="auth-plan-btn" onclick="openAuthPlanModal()">Plan</button>
  <div class="auth-hero">
  <div class="auth-brand">Nexo Hub19 investment</div>
  <div class="auth-tagline">Start Earning Today</div>
@@ -875,7 +882,26 @@ input[type="password"]{padding-right:46px;}
  <p style="margin-bottom:14px;">From there, your investment goes to work quietly in the background. Every day, for 80 days, 10% of your active stake is added straight to your balance — automatically, reliably, day after day. By the end of the full cycle, an investment can return up to 800% of what you put in. No charts to watch, no manual claiming, no stress — just steady, compounding growth happening for you around the clock.</p>
  <p style="margin-bottom:14px;">And it doesn't stop there. Nexo Hub19 also believes in the power of community. Share your referral link with friends and family, and you'll earn 10% from anyone you personally bring in, 4% from their referrals, and 2% from the level after that — three layers deep, rewarding you for building a network, not just for going it alone.</p>
  <p style="margin-bottom:14px;">When you're ready to enjoy your earnings, withdrawing is simple and fast, sent directly to your mobile money — a small 10% service charge keeps the platform running smoothly for everyone.</p>
- <p style="margin-bottom:18px;">Whether you're investing UGX 10,000 or UGX 2 million, the promise is the same: consistency, transparency, and a little bit of extra love in your pocket every single day. Welcome to Nexo Hub19 — where patience truly pays.</p>
+ <p style="margin-bottom:18px;">Whether you're investing UGX 10,000 or UGX 100 million, the promise is the same: consistency, transparency, and a little bit of extra love in your pocket every single day. Welcome to Nexo Hub19 — where patience truly pays.</p>
+
+ <div style="border-radius:14px;overflow:hidden;margin-bottom:18px;box-shadow:0 8px 24px rgba(0,0,0,.15);">
+ <div style="background:linear-gradient(135deg,#f5a623,#e08e0b);color:#1a1a1a;text-align:center;font-weight:800;font-size:14px;padding:14px 12px;line-height:1.4;">
+ Nexo Hub19 investment Growth Plan — 10% Daily × 80 Days = 800% Total Return
+ </div>
+ <div style="overflow-x:auto;">
+ <table style="width:100%;border-collapse:collapse;background:#0f0f0f;font-family:'Inter',sans-serif;">
+ <thead>
+ <tr style="background:#161616;">
+ <th style="color:#f5a623;font-size:10.5px;letter-spacing:.5px;text-transform:uppercase;padding:12px 10px;text-align:left;white-space:nowrap;">Deposit (UGX)</th>
+ <th style="color:#f5a623;font-size:10.5px;letter-spacing:.5px;text-transform:uppercase;padding:12px 10px;text-align:left;white-space:nowrap;">Daily Profit (10%)</th>
+ <th style="color:#f5a623;font-size:10.5px;letter-spacing:.5px;text-transform:uppercase;padding:12px 10px;text-align:left;white-space:nowrap;">80-Day Total (UGX)</th>
+ </tr>
+ </thead>
+ <tbody id="growth-plan-table-body"></tbody>
+ </table>
+ </div>
+ </div>
+
  <div style="border-top:1px solid var(--border);padding-top:14px;font-size:13px;color:var(--muted);">
  Headquartered in Kenya 🇰🇪, with our Uganda 🇺🇬 office opening in November 2026.
  </div>
@@ -1002,6 +1028,26 @@ input[type="password"]{padding-right:46px;}
  <div class="avatar-picker-sub">Pick an emoji to represent you</div>
  <div class="emoji-grid" id="emoji-grid"></div>
  <button class="avatar-picker-skip" id="avatar-picker-skip-btn" onclick="skipAvatarPicker()">Skip for now</button>
+ </div>
+</div>
+
+<!-- Growth Plan popup (shown from Login/Register pages) -->
+<div class="plan-modal-overlay" id="plan-modal-overlay">
+ <div class="plan-modal-card">
+ <button class="plan-modal-close" onclick="closeAuthPlanModal()">✕</button>
+ <div class="plan-modal-header">Nexo Hub19 investment Growth Plan — 10% Daily × 80 Days = 800% Total Return</div>
+ <div style="overflow-x:auto;">
+ <table style="width:100%;border-collapse:collapse;background:#0f0f0f;font-family:'Inter',sans-serif;">
+ <thead>
+ <tr style="background:#161616;">
+ <th style="color:#f5a623;font-size:10px;letter-spacing:.5px;text-transform:uppercase;padding:11px 9px;text-align:left;white-space:nowrap;">Deposit (UGX)</th>
+ <th style="color:#f5a623;font-size:10px;letter-spacing:.5px;text-transform:uppercase;padding:11px 9px;text-align:left;white-space:nowrap;">Daily (10%)</th>
+ <th style="color:#f5a623;font-size:10px;letter-spacing:.5px;text-transform:uppercase;padding:11px 9px;text-align:left;white-space:nowrap;">80-Day Total</th>
+ </tr>
+ </thead>
+ <tbody id="auth-plan-table-body"></tbody>
+ </table>
+ </div>
  </div>
 </div>
 
@@ -1518,6 +1564,45 @@ function closePrivacyModal(event) {
 const tabMap = { home: 'sec-home', history: 'sec-history', team: 'sec-team', plan: 'sec-plan', profile: 'sec-profile', deposit: 'sec-deposit', withdraw: 'sec-withdraw', reinvest: 'sec-reinvest', brief: 'sec-brief' };
 const navOrder = ['home', 'team', 'plan', 'history', 'profile'];
 
+function renderGrowthPlanTable() {
+ const body = document.getElementById('growth-plan-table-body');
+ if (!body) return;
+ body.innerHTML = buildGrowthPlanRows();
+}
+
+function renderAuthPlanTable() {
+ const body = document.getElementById('auth-plan-table-body');
+ if (!body) return;
+ body.innerHTML = buildGrowthPlanRows();
+}
+
+function buildGrowthPlanRows() {
+ const tiers = [
+ 10000, 20000, 50000, 100000, 200000, 500000,
+ 1000000, 2000000, 5000000, 10000000, 20000000,
+ 30000000, 40000000, 50000000, 60000000, 70000000, 80000000, 90000000, 100000000
+ ];
+ return tiers.map((deposit, i) => {
+ const daily = Math.round(deposit * 0.10);
+ const total = daily * 80;
+ const rowBg = i % 2 === 0 ? '#0f0f0f' : '#161616';
+ return `<tr style="background:${rowBg};border-top:1px solid #262626;">
+ <td style="padding:12px 9px;color:#fff;font-weight:700;font-size:12.5px;font-variant-numeric:tabular-nums;white-space:nowrap;">${fmt(deposit).replace('UGX ', '')}</td>
+ <td style="padding:12px 9px;color:#22c55e;font-weight:700;font-size:12.5px;font-variant-numeric:tabular-nums;white-space:nowrap;">${fmt(daily).replace('UGX ', '')}</td>
+ <td style="padding:12px 9px;color:#f5a623;font-weight:700;font-size:12.5px;font-variant-numeric:tabular-nums;white-space:nowrap;">${fmt(total).replace('UGX ', '')}</td>
+ </tr>`;
+ }).join('');
+}
+
+function openAuthPlanModal() {
+ renderAuthPlanTable();
+ document.getElementById('plan-modal-overlay').classList.add('show');
+}
+
+function closeAuthPlanModal() {
+ document.getElementById('plan-modal-overlay').classList.remove('show');
+}
+
 function switchTab(tab) {
  if (tab === 'withdraw' && settingsData.withdrawLocked) {
  // Silent - no modal
@@ -1533,7 +1618,7 @@ function switchTab(tab) {
  pushNavState({ view: 'dashboard', tab: tab }, tab);
 }
 
-function menuNav(tab) { switchTab(tab); }
+function menuNav(tab) { switchTab(tab); if (tab === 'brief') renderGrowthPlanTable(); }
 
 function toggleHistoryMenu() {
  const sub = document.getElementById('history-submenu');
