@@ -157,6 +157,8 @@ input[type="password"]{padding-right:46px;}
 .welcome-greeting span{font-weight:800;}
 .welcome-copy-link{background:var(--teal);border:none;border-radius:9px;color:#fff;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;letter-spacing:.2px;cursor:pointer;display:flex;align-items:center;gap:6px;padding:9px 14px;}
 .welcome-copy-link:active{transform:scale(.96);}
+.welcome-share-btn{background:#00C000;border:none;border-radius:10px;color:#fff;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:10px 12px;flex-shrink:0;align-self:flex-start;}
+.welcome-share-btn:active{transform:scale(.96);}
 .stats-card{background:transparent;border:none;padding:0;}
 .balance-big{text-align:center;padding:8px 0 16px;}
 .balance-label{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:8px;}
@@ -512,11 +514,11 @@ input[type="password"]{padding-right:46px;}
  <div class="auth-hero">
  <div class="auth-brand">Nexo Hub19 investment</div>
  <div class="auth-tagline">Start Earning Today</div>
+ <div id="reg-referrer-display" style="display:none;font-size:11px;color:var(--accent);font-weight:700;margin-top:10px;text-align:center;"></div>
  </div>
  <div class="auth-card">
  <div class="auth-title">Create Account</div>
  <div class="auth-subtitle">Get UGX 4,000 registration bonus</div>
- <div id="reg-referrer-display" style="display:none;font-size:11px;color:var(--accent);font-weight:700;margin-bottom:14px;"></div>
  <div class="field-group">
  <label class="field-label">Username</label>
  <div class="field-wrap"><span class="field-icon"></span><input type="text" id="reg-username" placeholder="Choose a username"></div>
@@ -573,6 +575,7 @@ input[type="password"]{padding-right:46px;}
  <div class="welcome-greeting">Welcome back, <span id="dash-username">—</span></div>
  <button class="welcome-copy-link" onclick="copyRef()"><span></span>Copy Referral Link</button>
  </div>
+ <button class="welcome-share-btn" onclick="shareRefLink()"><span></span>Share</button>
  </div>
  </div>
  <div class="section">
@@ -1365,7 +1368,6 @@ async function initApp() {
  showDashboard();
  switchTab('home');
  startDailyProfitLoop();
- startInactivityWatcher();
  } else {
  sessionStorage.removeItem('pp_current_user');
  showAuth('login-page');
@@ -1376,7 +1378,7 @@ async function initApp() {
  showAuth('login-page');
  }
  } else {
- showAuth('login-page');
+ showAuth('register-page');
  }
  
  // Loading screen removed - browser's native tab indicator handles load state
@@ -1451,6 +1453,14 @@ function copyRef() {
  }
 }
 
+function shareRefLink() {
+ const url = document.getElementById('ref-url-new');
+ const link = url && url.value ? url.value : '';
+ const message = "Hey! 🌟 Join Nexo Hub19 investment and get a UGX 4,000 welcome bonus — withdrawable instantly! 💰 Invest from UGX 10,000, withdraw from UGX 5,000. Tap to join: " + link;
+ const waUrl = 'https://wa.me/?text=' + encodeURIComponent(message);
+ window.open(waUrl, '_blank');
+}
+
 function openTelegramGroup() {
  if (settingsData.telegramGroup) window.open(settingsData.telegramGroup, '_blank');
 }
@@ -1483,7 +1493,7 @@ function showAuth(id) {
  const refCode = urlParams.get('ref') || null;
  const refDisplay = document.getElementById('reg-referrer-display');
  if (refDisplay) {
- if (refCode) { refDisplay.textContent = 'Referred by: ' + refCode; refDisplay.style.display = 'block'; }
+ if (refCode) { refDisplay.textContent = "You're being referred by " + refCode; refDisplay.style.display = 'block'; }
  else { refDisplay.textContent = ''; refDisplay.style.display = 'none'; }
  }
  }
@@ -2486,7 +2496,6 @@ async function doLogin() {
  showDashboard();
  switchTab('home');
  startDailyProfitLoop();
- startInactivityWatcher();
  // Silent login - no toast
  } catch (error) {
  console.error('Login error:', error);
@@ -2583,29 +2592,9 @@ async function doLogout() {
  }, 800);
 }
 
-let inactivityTimer = null;
-const INACTIVITY_LIMIT = 2 * 60 * 60 * 1000;
-function resetInactivityTimer() {
- if (!currentUser) return;
- if (inactivityTimer) clearTimeout(inactivityTimer);
- inactivityTimer = setTimeout(() => { if (currentUser) doLogout(); }, INACTIVITY_LIMIT);
-}
-function startInactivityWatcher() {
- ['click', 'touchstart', 'scroll', 'keydown'].forEach(evt => document.addEventListener(evt, resetInactivityTimer, { passive: true }));
- resetInactivityTimer();
-}
-
 (function() {
- const params = new URLSearchParams(window.location.search);
- const ref = params.get('ref');
- if (ref) { sessionStorage.setItem('pp_pending_ref', ref); sessionStorage.setItem('pp_open_register', 'true'); }
- const openReg = sessionStorage.getItem('pp_open_register');
- if (openReg) {
- sessionStorage.removeItem('pp_open_register');
- const refCode = sessionStorage.getItem('pp_pending_ref');
- const rd = document.getElementById('reg-referrer-display');
- if (refCode && rd) { rd.textContent = 'Referred by: ' + refCode; rd.style.display = 'block'; }
- }
+ // Referral display is now handled directly by showAuth('register-page'),
+ // which reads ?ref= from the URL each time the register page is shown.
 })();
 
 window.addEventListener('popstate', (e) => {

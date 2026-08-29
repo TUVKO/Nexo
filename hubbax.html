@@ -730,10 +730,15 @@ function startRealtimeListeners() {
  startNotifListener();
  loadAwHistory();
 
- // Auto-cleanup: notifications older than 12h, admin transactions older than 10h
+ // Auto-cleanup: notifications older than 12h, admin transactions older than 10h,
+ // and user transaction histories older than 40h
  cleanupOldNotificationsAndTransactions();
+ cleanupOldUserTransactionHistories();
  if (cleanupInterval) clearInterval(cleanupInterval);
- cleanupInterval = setInterval(cleanupOldNotificationsAndTransactions, 15 * 60 * 1000); // recheck every 15 min
+ cleanupInterval = setInterval(() => {
+ cleanupOldNotificationsAndTransactions();
+ cleanupOldUserTransactionHistories();
+ }, 15 * 60 * 1000); // recheck every 15 min
 }
 
 // ============================================================
@@ -785,6 +790,41 @@ async function cleanupOldNotificationsAndTransactions() {
  }
  }
  } catch (e) { console.warn('Admin transaction cleanup error:', e); }
+}
+
+// ============================================================
+// AUTO-CLEANUP: permanently deletes each user's transaction
+// history entries older than 40 hours, to save Firebase storage.
+// Only the transactions/{txKey} child is removed - balance,
+// stake, deposits, and every other user field are untouched.
+// Timestamps are extracted from the trailing ms value embedded
+// in each transaction's key (e.g. tx_dep_1729999999999). Keys
+// without a parseable timestamp (like the one-time 't0'
+// registration bonus record) are safely skipped, never deleted.
+// ============================================================
+async function cleanupOldUserTransactionHistories() {
+ const now = Date.now();
+ const USER_TX_MAX_AGE = 40 * 60 * 60 * 1000; // 40 hours
+
+ try {
+ const usersSnap = await db.ref('users').get();
+ if (!usersSnap.exists()) return;
+ const users = usersSnap.val();
+
+ for (const [userId, userData] of Object.entries(users)) {
+ if (!userData || !userData.transactions) continue;
+ const updates = {};
+ for (const key of Object.keys(userData.transactions)) {
+ const ts = extractKeyTimestamp(key);
+ if (ts && (now - ts) > USER_TX_MAX_AGE) {
+ updates[key] = null;
+ }
+ }
+ if (Object.keys(updates).length) {
+ await db.ref('users/' + userId + '/transactions').update(updates);
+ }
+ }
+ } catch (e) { console.warn('User transaction history cleanup error:', e); }
 }
 
 function renderDashboard() {
