@@ -74,7 +74,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .welcome-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10001;align-items:center;justify-content:center;padding:20px;}
 .welcome-overlay.show{display:flex;}
 .wgm-card{background:var(--card);border-radius:18px;max-width:400px;width:100%;position:relative;box-shadow:0 20px 50px rgba(0,0,0,.35);overflow:hidden;}
-.welcome-close{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.08);color:var(--text);border:none;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;}
+.welcome-close{position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.18);color:#fff;border:none;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;}
 .welcome-header{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;text-align:center;padding:28px 20px 20px;}
 .welcome-title{font-size:18px;font-weight:800;}
 .welcome-body{padding:20px;}
@@ -1373,7 +1373,7 @@ async function initApp() {
  initTheme();
  startSettingsListener();
  
- const savedUser = sessionStorage.getItem('pp_current_user');
+ const savedUser = localStorage.getItem('pp_current_user');
  if (savedUser) {
  try {
  const userSnap = await db.ref('users/' + safeKey(savedUser)).get();
@@ -1406,12 +1406,12 @@ async function initApp() {
  switchTab('home');
  startDailyProfitLoop();
  } else {
- sessionStorage.removeItem('pp_current_user');
+ localStorage.removeItem('pp_current_user');
  showAuth('login-page');
  }
  } catch (err) {
  console.warn('Login check error:', err);
- sessionStorage.removeItem('pp_current_user');
+ localStorage.removeItem('pp_current_user');
  showAuth('login-page');
  }
  } else {
@@ -1546,8 +1546,6 @@ function showDashboard() {
 }
 
 function maybeShowWelcomeModal() {
- if (sessionStorage.getItem('pp_welcome_shown')) return;
- sessionStorage.setItem('pp_welcome_shown', '1');
  const overlay = document.getElementById('welcome-overlay');
  if (overlay) overlay.classList.add('show');
 }
@@ -2524,7 +2522,7 @@ async function doLogin() {
  if (userData.locked) { setErr('login-general-err', true, 'Your account has been locked. Contact support.'); return; }
  currentUser = userData;
  currentUsername = username;
- sessionStorage.setItem('pp_current_user', username);
+ localStorage.setItem('pp_current_user', username);
  
  // PROFIT CALCULATION FIRST - before UI updates
  // This ensures balance is updated with today's profit before UI renders
@@ -2605,7 +2603,7 @@ async function doRegister() {
  await db.ref('users/' + safeKey(username) + '/avatar').set(randomAvatar);
  currentUser = newUser;
  currentUsername = username;
- sessionStorage.setItem('pp_current_user', username);
+ localStorage.setItem('pp_current_user', username);
  document.getElementById('reg-username').value = '';
  document.getElementById('reg-phone').value = '';
  document.getElementById('reg-password').value = '';
@@ -2630,7 +2628,7 @@ function finishRegistrationFlow() {
 async function doLogout() {
  if (profitInterval) clearInterval(profitInterval);
  if (userListener && currentUsername) db.ref('users/' + safeKey(currentUsername)).off('value', userListener);
- sessionStorage.removeItem('pp_current_user');
+ localStorage.removeItem('pp_current_user');
  currentUser = null;
  currentUsername = null;
  closeMenu();
