@@ -70,6 +70,21 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .plan-modal-card{background:#0f0f0f;border-radius:16px;max-width:480px;width:100%;max-height:80vh;overflow-y:auto;position:relative;box-shadow:0 20px 50px rgba(0,0,0,.5);}
 .plan-modal-close{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;border:none;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;}
 .plan-modal-header{background:linear-gradient(135deg,#f5a623,#e08e0b);color:#1a1a1a;text-align:center;font-weight:800;font-size:13px;padding:16px 40px 14px 16px;line-height:1.4;}
+/* Welcome guidance popup */
+.welcome-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10001;align-items:center;justify-content:center;padding:20px;}
+.welcome-overlay.show{display:flex;}
+.wgm-card{background:var(--card);border-radius:18px;max-width:400px;width:100%;position:relative;box-shadow:0 20px 50px rgba(0,0,0,.35);overflow:hidden;}
+.welcome-close{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.08);color:var(--text);border:none;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;}
+.welcome-header{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;text-align:center;padding:28px 20px 20px;}
+.welcome-title{font-size:18px;font-weight:800;}
+.welcome-body{padding:20px;}
+.welcome-msg{font-size:13.5px;line-height:1.6;color:var(--text);margin-bottom:18px;}
+.welcome-msg b{color:var(--accent);}
+.wa-tab{display:flex;align-items:center;gap:12px;background:rgba(37,211,102,.10);border:1px solid rgba(37,211,102,.35);border-radius:14px;padding:13px 14px;cursor:pointer;transition:transform .15s;}
+.wa-tab:active{transform:scale(.98);}
+.wa-text-title{font-size:13.5px;font-weight:800;color:var(--text);}
+.wa-text-sub{font-size:11px;color:var(--muted);}
+.wa-arrow{margin-left:auto;color:#25D366;font-size:18px;}
 .auth-page.active{display:flex;}
 .auth-hero{text-align:center;margin-bottom:28px;}
 .auth-logo{width:72px;height:72px;background:linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);border-radius:22px;display:grid;place-items:center;font-size:34px;margin:0 auto 14px;color:#fff;box-shadow:0 8px 24px rgba(22,35,74,.25);overflow:hidden;}
@@ -1034,6 +1049,28 @@ input[type="password"]{padding-right:46px;}
  </div>
 </div>
 
+<!-- Welcome guidance popup (shown once per session after login/register/reload) -->
+<div class="welcome-overlay" id="welcome-overlay">
+ <div class="wgm-card">
+ <button class="welcome-close" onclick="closeWelcomeModal()">✕</button>
+ <div class="welcome-header">
+ <div class="welcome-title">Welcome to Nexo Hub19!</div>
+ </div>
+ <div class="welcome-body">
+ <div class="welcome-msg">
+ Here's a quick tip to get started: earn <b>10% daily profit</b> on your investment. Minimum deposit is <b>UGX 10,000</b>, and you can withdraw once you reach the minimum of <b>UGX 5,000</b>. Need help along the way? Our support team is one tap away.
+ </div>
+ <div class="wa-tab" onclick="openWaGroup()">
+ <div>
+ <div class="wa-text-title">Join WhatsApp Community</div>
+ <div class="wa-text-sub">Get updates, tips & support</div>
+ </div>
+ <div class="wa-arrow">›</div>
+ </div>
+ </div>
+ </div>
+</div>
+
 <!-- Growth Plan popup (shown from Login/Register pages) -->
 <div class="plan-modal-overlay" id="plan-modal-overlay">
  <div class="plan-modal-card">
@@ -1505,6 +1542,19 @@ function showDashboard() {
  document.getElementById('dashboard-page').style.display = 'block';
  document.getElementById('dashboard-page').classList.add('active');
  pushNavState({ view: 'dashboard', tab: 'home' }, 'home');
+ maybeShowWelcomeModal();
+}
+
+function maybeShowWelcomeModal() {
+ if (sessionStorage.getItem('pp_welcome_shown')) return;
+ sessionStorage.setItem('pp_welcome_shown', '1');
+ const overlay = document.getElementById('welcome-overlay');
+ if (overlay) overlay.classList.add('show');
+}
+
+function closeWelcomeModal() {
+ const overlay = document.getElementById('welcome-overlay');
+ if (overlay) overlay.classList.remove('show');
 }
 
 function openMenu() {
@@ -2283,6 +2333,7 @@ async function doWithdraw() {
  }
  if (!currentUser.activated) { 
  sendAdminNotification('withdrawal_not_activated', currentUsername, 0, 'Inactive account tried to withdraw');
+ setErr('with-amount-err', true, "Withdrawals are available once you've made your first investment. Deposit at least UGX 10,000 to activate your account.");
  return; 
  }
  const minWith = settingsData.minWithdraw || 10000;
