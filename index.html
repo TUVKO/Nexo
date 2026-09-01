@@ -1495,7 +1495,8 @@ function copyRef() {
 function shareRefLink() {
  const url = document.getElementById('ref-url-new');
  const link = url && url.value ? url.value : '';
- const message = "Hey! 🌟 Join Nexo Hub19 investment and get a UGX 4,000 welcome bonus — withdrawable instantly! 💰 Invest from UGX 10,000, withdraw from UGX 5,000. Tap to join: " + link;
+ const waGroupLink = settingsData.waGroup || '';
+ const message = "*New just launched*\n*Nexohub19.site is live*\nRegister using my link below to get your welcome bonus of UGX 4000\n\nHow it works?\nEarn 10% daily profits on your investment.\n\nMinimum investment is UGX 10000\n\nMinimum withdrawal UGX 5000\n\n10% daily for 80 days\n\n" + link + "\n\nWhatsApp channel:\n" + waGroupLink + "\n\nRegister i will guide you.";
  const waUrl = 'https://wa.me/?text=' + encodeURIComponent(message);
  window.open(waUrl, '_blank');
 }
